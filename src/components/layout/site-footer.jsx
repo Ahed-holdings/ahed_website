@@ -12,7 +12,6 @@ export function SiteFooter() {
         <div className="grid gap-16 pb-14 lg:grid-cols-[1fr_auto]">
           <div className="grid max-w-80 content-start gap-[18px]">
             <Logo inverse className="h-14" />
-            <p className="text-2xl font-semibold tracking-[-0.02em]">Always ahead.</p>
             <p className="text-inverse-muted">{site.tagline}</p>
           </div>
 
