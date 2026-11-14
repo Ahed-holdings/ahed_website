@@ -28,13 +28,7 @@ export function EngagementMenu({ models }) {
   }, []);
 
   // No links: on touch screens a tap must show the description, not leave the page (the CTA below covers contact)
-  const items = models.map((m) => ({
-    text: m.title,
-    marquee: m.text,
-    description: m.text,
-    logo: "/img/logo.webp", // AHED logo (in navy) between the repeats of the description in the gold band
-    logoRatio: 640 / 193,
-  }));
+  const items = models.map((m) => ({ text: m.title, marquee: m.text, description: m.text }));
 
   return (
     <div

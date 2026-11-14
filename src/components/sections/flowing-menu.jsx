@@ -8,8 +8,6 @@
  * - Row labels are also capped by the row width (5.5cqw) so long labels fit on phones instead of being clipped.
  * - Fix: the unmount cleanup now resets the animation-frame id. Upstream kept the cancelled id, so after a remount
  *   (StrictMode in dev) the band never moved or appeared.
- * - `item.logo` (+ `item.logoRatio`): a logo between the repeats of the band text, drawn in the band text colour
- *   via CSS mask at its own aspect ratio (the upstream `item.image` is a photo cropped into a pill).
  * - Removed the Next.js-only 'use client' directive.
  */
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -40,10 +38,6 @@ const PART_TEXT =
   'px-[0.4em] text-[clamp(14px,calc(30cqh*var(--flowing-menu-band,1)),96px)] leading-[1.1] font-normal tracking-[-0.025em] whitespace-nowrap';
 const IMAGE =
   'mx-[calc(3.5cqh*var(--flowing-menu-band,1))] block aspect-[2.2/1] h-[calc(56cqh*var(--flowing-menu-band,1))] shrink-0 rounded-full bg-cover bg-center group-data-[shape=circle]/fm:aspect-square group-data-[shape=rounded]/fm:aspect-[3/2] group-data-[shape=rounded]/fm:rounded-[calc(10cqh*var(--flowing-menu-band,1))]';
-// Ahed: logo between band repeats, drawn in the band's text colour (the image is used as a mask), so a gold logo
-// part never vanishes on a gold band. `item.logoRatio` = width / height of the image.
-const LOGO =
-  'mx-[calc(6cqh*var(--flowing-menu-band,1))] block h-[calc(38cqh*var(--flowing-menu-band,1))] shrink-0 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]';
 const FLOAT = 'pointer-events-none invisible absolute inset-0 z-[1] overflow-hidden [clip-path:inset(50%_0_50%_0)]';
 const FLOAT_LAYER = 'absolute top-0 left-0 h-1/4 w-full [container-type:size] will-change-[transform,opacity]';
 
@@ -645,12 +639,6 @@ function FlowingMenu({
                     <div className={PART} key={copy}>
                       <span className={PART_TEXT}>{item.marquee ?? item.text}</span>
                       {item.image && <span className={IMAGE} style={{ backgroundImage: `url(${item.image})` }} />}
-                      {item.logo && (
-                        <span
-                          className={LOGO}
-                          style={{ maskImage: `url(${item.logo})`, aspectRatio: item.logoRatio ?? 3.3 }}
-                        />
-                      )}
                     </div>
                   ))}
                 </div>
@@ -687,12 +675,6 @@ function FlowingMenu({
                       <div className={PART} key={copy}>
                         <span className={PART_TEXT}>{item.marquee ?? item.text}</span>
                         {item.image && <span className={IMAGE} style={{ backgroundImage: `url(${item.image})` }} />}
-                      {item.logo && (
-                        <span
-                          className={LOGO}
-                          style={{ maskImage: `url(${item.logo})`, aspectRatio: item.logoRatio ?? 3.3 }}
-                        />
-                      )}
                       </div>
                     ))}
                 </div>

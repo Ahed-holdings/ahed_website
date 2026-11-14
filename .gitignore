@@ -25,8 +25,8 @@ pnpm-debug.log*
 # Playwright MCP screenshots / console logs
 .playwright-mcp/
 
-# Claude Code: keep shared launch.json, ignore personal settings
-.claude/settings.local.json
+# Claude Code local files
+.claude/
 
 # Office lock files (e.g. open .docx in docs/client-brief)
 ~$*

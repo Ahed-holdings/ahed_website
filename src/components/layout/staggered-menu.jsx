@@ -12,9 +12,11 @@ import { cx } from "../ui";
  * - Panel never scrolls: link size follows the screen height (see <style>); very short screens drop the footer.
  * - Header: just the logo and the menu button, no bar or background, on top of the panel. Since it floats over
  *   navy heroes, white sections and the white panel, both check what is behind them (on scroll, resize, navigation
- *   and open/close) and switch between their light-on-navy and navy-on-light versions. The logo shows at the top
- *   of the page (in the hero) and over the full-screen phone menu; once scrolled it fades out so it never sits on
- *   top of headings. The button stays: outlined over the hero, solid brand gold once scrolled past the hero.
+ *   and open/close) and switch between their light-on-navy and navy-on-light versions. The logo is always shown,
+ *   bare (no tile or bar): navy & gold over light sections, white letters over navy. The button: outlined over the
+ *   hero, solid brand gold once scrolled past the hero.
+ * - While the menu is open the header logo fades out; the panel carries its own logo at its top left (`brand`
+ *   rendered on light), on every screen size.
  * - Brand colours via tokens: white panel, navy text, bronze accent; gold + navy underlays (`colors`).
  * - React Router <Link>s with aria-current; the menu closes on navigation, Escape and click-away.
  * - Closed panel is `inert` (not focusable); opening moves focus to the first link; Escape returns it to the button.
@@ -38,7 +40,6 @@ export function StaggeredMenu({
   // What is behind the logo and the button: true = navy (use the light versions)
   const [logoOnDark, setLogoOnDark] = useState(true);
   const [toggleOnDark, setToggleOnDark] = useState(true);
-  const [logoVisible, setLogoVisible] = useState(true);
   // Scrolled past the first section (the hero): the menu button turns brand gold
   const [pastHero, setPastHero] = useState(false);
   const headerRef = useRef(null);
@@ -286,9 +287,6 @@ export function StaggeredMenu({
       // (Decided up front, because the panel is still sliding in at this point.)
       setToggleOnDark(open ? false : isDarkBehind(toggleBtnRef.current));
       setLogoOnDark(open && fullScreenPanel() ? false : isDarkBehind(brandRef.current));
-      // With no bar behind it, the logo would sit on top of page headings once scrolled: show it in the
-      // hero (top of the page) and over the full-screen menu panel only.
-      setLogoVisible(window.scrollY < 24 || (open && fullScreenPanel()));
       const hero = document.querySelector("main > section");
       const btn = toggleBtnRef.current?.getBoundingClientRect();
       setPastHero(Boolean(hero && btn && hero.getBoundingClientRect().bottom < btn.top + btn.height / 2));
@@ -345,6 +343,12 @@ export function StaggeredMenu({
           open && "pointer-events-auto",
         )}
       >
+        {/* The panel's own logo, top left, level with the header row (the header logo hides while open) */}
+        {brand && (
+          <div className="absolute top-0 left-(--gutter) flex h-[78px] items-center lg:left-12">
+            {typeof brand === "function" ? brand(false) : brand}
+          </div>
+        )}
         <nav aria-label="Main">
           <ul className="sm-panel-list grid gap-0.5" data-numbering={displayItemNumbering || undefined}>
             {items.map((it) => {
@@ -381,10 +385,10 @@ export function StaggeredMenu({
           <div
             ref={brandRef}
             data-inverse={logoOnDark ? "" : undefined}
-            inert={!logoVisible}
+            inert={open}
             className={cx(
-              "flex transition-[opacity,translate] duration-280 ease-out-expo",
-              logoVisible ? "pointer-events-auto" : "pointer-events-none -translate-y-2 opacity-0",
+              "flex transition-opacity duration-280 ease-out-expo",
+              open ? "pointer-events-none opacity-0" : "pointer-events-auto",
             )}
           >
             {typeof brand === "function" ? brand(logoOnDark) : brand}

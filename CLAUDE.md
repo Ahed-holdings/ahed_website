@@ -21,8 +21,8 @@ Core message on every page: *we help businesses make the transition from ambitio
   and a last `/* → /index.html 200` rule so every route works on reload; keep that rule last).
 - SEO trade-off of the SPA: pages are rendered in the browser. Google renders JavaScript, but social-card scrapers
   only see the home-page tags in `index.html`. Add prerendering if per-page link previews matter.
-- Not a git repository (removed on request). If git is set up again, ignore
-  `node_modules/`, `dist/`, `.playwright-mcp/`.
+- Git: `.gitignore` excludes `node_modules/`, `dist/`, `.playwright-mcp/`, `.env*`, logs, Office lock files (`~$*`)
+  and the whole `.claude/` folder (local only, not tracked).
 
 ## Structure
 ```
@@ -98,7 +98,7 @@ URLs: `/about`, `/services/strategy-advisory`, … (old `*.html` URLs redirect v
     (`sections/flowing-menu.jsx`, JS-TW; changes in its top comment: Lucide arrow so no @hugeicons, `item.to` router
     links, `item.description` for screen readers, labels capped by row width, band text 30cqh). Navy panel, numbered
     rows showing only the model names; the description appears only on hover/tap/focus, scrolling in the gold band
-    (by request: not shown in the rows), with the AHED logo in navy between its repeats (`item.logo`, drawn via CSS mask so the gold swoosh doesn't vanish on gold). Left aligned. Keep the "Ahed fix" in its unmount cleanup (resets the
+    (by request: not shown in the rows). Left aligned. Keep the "Ahed fix" in its unmount cleanup (resets the
     animation-frame id): without it, after a remount (StrictMode in dev) the band never appears. Rows are buttons (no links, so a tap
     on phones shows the description). Mounts when scrolled into view so its intro plays then.
   - Home "Who we work with" (navy): compact on request. Heading on top, the four audiences as `IconCard compact`
@@ -169,8 +169,9 @@ Brand gold is only 2.5:1 on white, so **never use `gold` for text on light backg
   floating with no bar. The logo checks what is behind it (white letters over navy `[data-inverse]`, navy-and-gold
   over light). The button is outlined in the hero (white over navy, navy over the white panel) and solid brand gold
   with navy lines (`bg-gold`, like the gold CTA) once scrolled past the first section, on any background.
-  The logo shows at the top of the page (in the hero) and over the full-screen phone menu; once scrolled it fades out
-  so it never sits on headings (the footer carries the logo further down). The button is always visible.
+  The logo is always visible and bare (no tile, no bar): `logo.webp` (navy & gold) over light sections, white
+  letters over navy ones. The button is always visible. While the menu is open the header logo fades out and the menu panel shows its
+  own navy & gold logo at its top left.
 - Menu panel: white, sliding in from the right (full screen below `lg`, `clamp(380px,40vw,520px)` from `lg`), never scrolls:
   link size follows the screen height (`--sm-fixed` in the component's <style>; checked from 1920×1080 to 320×568 and
   phones in landscape, where the contact footer is dropped below 34rem height). It slides in after
