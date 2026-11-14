@@ -50,15 +50,48 @@ function GroupTitle({ children }) {
 const FORM_NAME = "contact";
 const FORM_ENDPOINT = "/__forms.html";
 
+/** Lead fields in the order they appear in the WhatsApp message (empty ones are left out). */
+const whatsappFields = [
+  ["name", "Name"],
+  ["company", "Company"],
+  ["designation", "Designation"],
+  ["email", "Email"],
+  ["phone", "Phone"],
+  ["industry", "Industry"],
+  ["service", "Service of interest"],
+];
+
+/** wa.me link to the site's WhatsApp number with the enquiry already typed in. */
+function whatsappLink(data) {
+  const lines = whatsappFields
+    .map(([name, label]) => [label, String(data.get(name) ?? "").trim()])
+    .filter(([, value]) => value)
+    .map(([label, value]) => `${label}: ${value}`);
+  const text = [
+    "Hello AHED, I would like to request an initial discussion.",
+    "",
+    ...lines,
+    "",
+    "Challenge:",
+    String(data.get("challenge") ?? "").trim(),
+  ].join("\n");
+  return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
+}
+
 /**
  * Contact form card. Validates in the browser, then posts to Netlify Forms (see public/__forms.html), which stores
  * each lead and emails it to the address set under Forms → notifications in the Netlify UI (ceo@ahed.in).
  * Spam: a hidden honeypot field ("bot-field") that people never fill in.
+ * Preferred contact method "WhatsApp": the same click also opens WhatsApp (wa.me) to the site's number with the
+ * enquiry typed in, so the visitor only taps Send. Opened right away, inside the click, because browsers block
+ * pop-ups opened later; the email lead is still sent as a backup, and the success message links to WhatsApp again.
  * In `npm run dev` there is no Netlify, so the post is skipped and the success message shows (payload logged).
  */
 export function ContactForm() {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle");
+  // Set when the visitor chose WhatsApp: the link shown again in the success message
+  const [whatsappUrl, setWhatsappUrl] = useState(null);
 
   function onSubmit(e) {
     e.preventDefault();
@@ -74,10 +107,21 @@ export function ContactForm() {
       return;
     }
     setStatus("submitting");
-    const body = new URLSearchParams(new FormData(form)).toString();
+    const data = new FormData(form);
+    const body = new URLSearchParams(data).toString();
+
+    if (data.get("method") === "whatsapp") {
+      const url = whatsappLink(data);
+      setWhatsappUrl(url);
+      const win = window.open(url, "_blank");
+      if (win) win.opener = null;
+    } else {
+      setWhatsappUrl(null);
+    }
+
     const send = import.meta.env.DEV
       ? new Promise((resolve) => {
-          console.info("[contact form] dev mode, not sent:", Object.fromEntries(new FormData(form)));
+          console.info("[contact form] dev mode, not sent:", Object.fromEntries(data));
           setTimeout(() => resolve({ ok: true }), 600);
         })
       : fetch(FORM_ENDPOINT, {
@@ -328,9 +372,24 @@ export function ContactForm() {
               <CircleCheck aria-hidden strokeWidth={1.5} className="mt-0.5 size-5 shrink-0 text-inverse-accent" />
               <span>
                 <span className="block font-semibold">Thank you, your request has been received.</span>
-                <span className="text-sm text-inverse-muted">
-                  We will be in touch shortly to arrange an initial discussion.
-                </span>
+                {whatsappUrl ? (
+                  <span className="text-sm text-inverse-muted">
+                    WhatsApp has opened with your message ready: just tap Send. If it did not open,{" "}
+                    <a
+                      href={whatsappUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold text-inverse-accent underline-offset-4 hover:underline"
+                    >
+                      continue on WhatsApp
+                    </a>
+                    .
+                  </span>
+                ) : (
+                  <span className="text-sm text-inverse-muted">
+                    We will be in touch shortly to arrange an initial discussion.
+                  </span>
+                )}
               </span>
             </span>
           )}

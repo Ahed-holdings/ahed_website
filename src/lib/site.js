@@ -9,6 +9,8 @@ export const site = {
   email: "ceo@ahed.in",
   phone: "+91 91880 11117",
   phoneHref: "tel:+919188011117",
+  /** WhatsApp number, digits only with country code (wa.me links). Contact-form leads that prefer WhatsApp go here. */
+  whatsapp: "919188011117",
   // TODO: replace once the client confirms it.
   location: "City, Country",
 };

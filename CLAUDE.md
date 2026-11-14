@@ -112,6 +112,10 @@ URLs: `/about`, `/services/strategy-advisory`, … (old `*.html` URLs redirect v
     Honeypot `bot-field`; hidden `subject` sets the notification email subject. Leads are emailed to ceo@ahed.in via
     Netlify UI → Forms → contact → Form notifications (set there, not in code). Error state offers the direct email
     and phone and keeps the entries. In `npm run dev` nothing is sent (success shown, payload logged to the console).
+    Preferred contact method "WhatsApp": the submit click also opens `wa.me/<site.whatsapp>` (919188011117) with the
+    enquiry typed in (filled fields only), so the visitor just taps Send; opened inside the click so pop-up blockers
+    allow it. The email lead is still sent; the success message links to WhatsApp again in case it didn't open.
+    WhatsApp can't receive leads automatically without the paid Business API, so this relies on the visitor's tap.
   - Inner pages (`PageHero` with an image): side by side from 720px, one screen tall. Without an image: natural height.
   - `short:` variant (md+ and max-height 800px, e.g. 1366×768 laptops) tightens type and spacing so it still fits.
   - Anything white placed inside a navy section must set `text-foreground` (it inherits white), and use
