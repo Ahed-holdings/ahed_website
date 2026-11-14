@@ -116,6 +116,14 @@ URLs: `/about`, `/services/strategy-advisory`, … (old `*.html` URLs redirect v
     enquiry typed in (filled fields only), so the visitor just taps Send; opened inside the click so pop-up blockers
     allow it. The email lead is still sent; the success message links to WhatsApp again in case it didn't open.
     WhatsApp can't receive leads automatically without the paid Business API, so this relies on the visitor's tap.
+    Required: name, company, phone (8–15 digits, +/spaces/dashes/brackets allowed), industry, service, challenge.
+    Email is optional (by request), but required when "Email" is the preferred contact method; checked only when filled.
+    Email checks (`src/lib/email-check.js`), run when leaving the field and on submit: "Did you mean …?" for typos of
+    popular providers (advice only; company domains are never "corrected"), and a Google Public DNS lookup that the
+    domain exists and accepts mail (MX, or A as fallback), which blocks made-up domains. Only the domain is sent; if
+    DNS can't be reached the address is allowed. It can't prove the mailbox exists or belongs to the visitor.
+    If the check is still running at submit and WhatsApp is chosen, a blank tab opens inside the click (pop-up rule)
+    and is pointed at WhatsApp, or closed if the domain fails.
   - Inner pages (`PageHero` with an image): side by side from 720px, one screen tall. Without an image: natural height.
   - `short:` variant (md+ and max-height 800px, e.g. 1366×768 laptops) tightens type and spacing so it still fits.
   - Anything white placed inside a navy section must set `text-foreground` (it inherits white), and use
