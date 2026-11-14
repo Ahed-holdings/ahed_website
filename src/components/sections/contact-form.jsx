@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ChevronDown, CircleCheck, LoaderCircle, Mail, MessageCircle, Phone } from "lucide-react";
-import { services } from "@/lib/site";
+import { ChevronDown, CircleAlert, CircleCheck, LoaderCircle, Mail, MessageCircle, Phone } from "lucide-react";
+import { services, site } from "@/lib/site";
 import { ButtonArrow, buttonClass, cx, Eyebrow } from "../ui";
 
 const industries = [
@@ -46,9 +46,15 @@ function GroupTitle({ children }) {
   );
 }
 
+/** Netlify Forms: the static copy of this form Netlify detects at deploy (keep its field names in sync). */
+const FORM_NAME = "contact";
+const FORM_ENDPOINT = "/__forms.html";
+
 /**
- * Contact form card. Demo handler: validates and shows the success message, but sends nothing.
- * TODO: connect to Netlify Forms / Formspree / own backend before launch.
+ * Contact form card. Validates in the browser, then posts to Netlify Forms (see public/__forms.html), which stores
+ * each lead and emails it to the address set under Forms → notifications in the Netlify UI (ceo@ahed.in).
+ * Spam: a hidden honeypot field ("bot-field") that people never fill in.
+ * In `npm run dev` there is no Netlify, so the post is skipped and the success message shows (payload logged).
  */
 export function ContactForm() {
   const [errors, setErrors] = useState({});
@@ -68,10 +74,24 @@ export function ContactForm() {
       return;
     }
     setStatus("submitting");
-    setTimeout(() => {
-      form.reset();
-      setStatus("sent");
-    }, 600);
+    const body = new URLSearchParams(new FormData(form)).toString();
+    const send = import.meta.env.DEV
+      ? new Promise((resolve) => {
+          console.info("[contact form] dev mode, not sent:", Object.fromEntries(new FormData(form)));
+          setTimeout(() => resolve({ ok: true }), 600);
+        })
+      : fetch(FORM_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body,
+        });
+    send
+      .then((res) => {
+        if (!res.ok) throw new Error(`Form post failed: ${res.status}`);
+        form.reset();
+        setStatus("sent");
+      })
+      .catch(() => setStatus("error"));
   }
 
   const clearError = (name) => errors[name] && setErrors(({ [name]: _removed, ...rest }) => rest);
@@ -131,6 +151,15 @@ export function ContactForm() {
       data-reveal
       className="rounded-media border border-border bg-card p-6 shadow-[0_24px_60px_-40px_rgb(11_31_59/0.35)] sm:p-10"
     >
+      {/* Netlify Forms: which form this is, the notification email's subject, and the spam honeypot */}
+      <input type="hidden" name="form-name" value={FORM_NAME} />
+      <input type="hidden" name="subject" value="New enquiry from the Ahed website" />
+      <p hidden>
+        <label>
+          Leave this empty: <input name="bot-field" tabIndex={-1} autoComplete="off" />
+        </label>
+      </p>
+
       <div className="mb-8 grid gap-3 border-b border-border pb-7">
         <Eyebrow>Request an initial discussion</Eyebrow>
         <h2 className="text-h3">Tell us about your business</h2>
@@ -189,7 +218,7 @@ export function ContactForm() {
             {...a11y("phone", true)}
             type="tel"
             autoComplete="tel"
-            placeholder="+000 00 000 0000"
+            placeholder="+91 00000 00000"
             className={control}
           />,
           { hint: "Include your country code.", full: true },
@@ -271,7 +300,26 @@ export function ContactForm() {
           </button>
         </div>
 
-        <p role="status" aria-live="polite" className={cx("sm:col-span-2", status !== "sent" && "sr-only")}>
+        <p role="status" aria-live="polite" className={cx("sm:col-span-2", status !== "sent" && status !== "error" && "sr-only")}>
+          {status === "error" && (
+            <span className="flex animate-fade-up items-start gap-3 rounded-card border border-destructive/30 bg-destructive/[0.04] px-5 py-4 text-foreground">
+              <CircleAlert aria-hidden strokeWidth={1.5} className="mt-0.5 size-5 shrink-0 text-destructive" />
+              <span>
+                <span className="block font-semibold">Sorry, your request could not be sent.</span>
+                <span className="text-sm text-muted-foreground">
+                  Please try again, or contact us directly at{" "}
+                  <a className="font-semibold text-primary underline-offset-4 hover:underline" href={`mailto:${site.email}`}>
+                    {site.email}
+                  </a>{" "}
+                  or{" "}
+                  <a className="font-semibold whitespace-nowrap text-primary underline-offset-4 hover:underline" href={site.phoneHref}>
+                    {site.phone}
+                  </a>
+                  .
+                </span>
+              </span>
+            </span>
+          )}
           {status === "sent" && (
             <span
               data-inverse

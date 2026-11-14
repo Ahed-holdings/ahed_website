@@ -106,7 +106,12 @@ URLs: `/about`, `/services/strategy-advisory`, … (old `*.html` URLs redirect v
   - Contact: off-white section; white form card (`sections/contact-form.jsx`: header, "About you" / "Your enquiry"
     groups, gold * on required fields and "(optional)" on the rest, Lucide chevron on selects, contact-method chips that
     turn navy when selected and stack below `sm`, navy success message) beside a navy panel (direct contact + "What
-    happens next", first three engagement-cycle steps), pinned while scrolling from `md`. The form still sends nothing.
+    happens next", first three engagement-cycle steps), pinned while scrolling from `md`.
+    Submissions go to **Netlify Forms**: the React form posts (url-encoded, `form-name=contact`) to
+    `public/__forms.html`, a hidden static copy Netlify detects at deploy. Keep the field names of both in sync.
+    Honeypot `bot-field`; hidden `subject` sets the notification email subject. Leads are emailed to ceo@ahed.in via
+    Netlify UI → Forms → contact → Form notifications (set there, not in code). Error state offers the direct email
+    and phone and keeps the entries. In `npm run dev` nothing is sent (success shown, payload logged to the console).
   - Inner pages (`PageHero` with an image): side by side from 720px, one screen tall. Without an image: natural height.
   - `short:` variant (md+ and max-height 800px, e.g. 1366×768 laptops) tightens type and spacing so it still fits.
   - Anything white placed inside a navy section must set `text-foreground` (it inherits white), and use
@@ -186,10 +191,12 @@ Brand gold is only 2.5:1 on white, so **never use `gold` for text on light backg
 - Scrollbars are hidden site-wide (`index.css` base layer: `scrollbar-width: none` + `::-webkit-scrollbar`); scrolling still works.
 
 ## Open items / TODO
-- [ ] Replace placeholders: `hello@yourdomain.com`, `+000 00 000 0000`, "City, Country", founder name + bio + photo (About page).
+- [x] Contact details: ceo@ahed.in, +91 91880 11117 (`lib/site.js`).
+- [ ] Replace placeholders: "City, Country", founder name + bio + photo (About page).
 - [x] Logo: AHED "always ahead" recoloured to navy & gold (`src/components/layout/logo.jsx`). It's a 640×193 raster recoloured from the client's file; ask the client for a vector (SVG/AI) master for print and sharper rendering.
 - [ ] Client still to confirm whether the site represents a person or a registered firm.
-- [ ] Hook up the contact form (`src/components/sections/contact-form.jsx` currently validates and shows the success message but sends nothing. Formspree or a Netlify Forms static stub both work with a static Netlify site).
+- [x] Contact form sends via Netlify Forms. On Netlify: enable form detection (Forms) and add the email
+  notification to ceo@ahed.in; then send one test enquiry from the live site.
 - [ ] Write the 10 Insights articles (titles are in `docs/content.md`) and create article pages; cards currently link to `#`.
 - [ ] Swap in better/licensed photos where needed (see `docs/images.md`). Some home/about images reuse service photos.
 - [ ] Privacy Policy and Terms pages.
