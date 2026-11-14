@@ -18,7 +18,7 @@ const featured = {
   label: "Featured · Management systems",
   title: "Why Growing Businesses Need Better Management Systems",
   text: "As businesses grow, informal ways of working stop scaling. A look at the management systems that help leadership teams keep control without slowing down.",
-  image: "/img/performance.jpg",
+  image: "/img/performance.webp",
 };
 
 const articles = [
@@ -26,55 +26,55 @@ const articles = [
     cat: "family",
     label: "Family business",
     title: "When Should a Family Business Professionalise Its Operations?",
-    image: "/img/people.jpg",
+    image: "/img/people.webp",
   },
   {
     cat: "performance",
     label: "Performance",
     title: "How to Build an Effective KPI and MIS Framework",
-    image: "/img/performance.jpg",
+    image: "/img/performance.webp",
   },
   {
     cat: "technology",
     label: "Technology",
     title: "Why ERP Implementation Often Fails to Solve Business Problems",
-    image: "/img/digital.jpg",
+    image: "/img/digital.webp",
   },
   {
     cat: "finance",
     label: "Finance",
     title: "How to Improve Profitability Without Simply Cutting Costs",
-    image: "/img/finance.jpg",
+    image: "/img/finance.webp",
   },
   {
     cat: "performance",
     label: "Sales",
     title: "Building a Sales Process That Does Not Depend on One Person",
-    image: "/img/strategy.jpg",
+    image: "/img/strategy.webp",
   },
   {
     cat: "systems",
     label: "New ventures",
     title: "What Should Be Included in a 90-Day Business Establishment Plan?",
-    image: "/img/strategy.jpg",
+    image: "/img/strategy.webp",
   },
   {
     cat: "systems",
     label: "Operations",
     title: "How to Decide Between In-House Teams and Outsourced Services",
-    image: "/img/managed.jpg",
+    image: "/img/managed.webp",
   },
   {
     cat: "finance",
     label: "Finance",
     title: "How Better Financial Reporting Supports Business Growth",
-    image: "/img/finance.jpg",
+    image: "/img/finance.webp",
   },
   {
     cat: "family",
     label: "Management systems",
     title: "Moving from Founder-Dependent Operations to Structured Management",
-    image: "/img/people.jpg",
+    image: "/img/people.webp",
   },
 ];
 

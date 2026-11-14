@@ -2,6 +2,11 @@ import { Briefcase, ChartColumn, ClipboardList, Repeat, Shield, Users } from "lu
 
 export const site = {
   name: "Ahed – Everything Ahead",
+  /**
+   * Site address, used for sitemap.xml and robots.txt (vite.config.js). On Netlify builds the project's main address
+   * (env URL, the custom domain once connected) takes over, so this is only the fallback for local builds.
+   */
+  url: "https://ahed-holdings.netlify.app",
   tagline: "Helping businesses make the transition from ambition to structured, sustainable performance.",
   /** Default meta description (home page and any page without its own) */
   description:
@@ -36,7 +41,7 @@ export const services = [
   {
     slug: "strategy-advisory",
     title: "Strategy Advisory",
-    image: "/img/strategy.jpg",
+    image: "/img/strategy.webp",
     tags: "Business strategy · Growth planning · Market expansion · Operating models",
     summary:
       "Define the direction, identify growth opportunities and translate business ambitions into clear priorities and executable plans.",
@@ -63,7 +68,7 @@ export const services = [
   {
     slug: "performance-improvement",
     title: "Performance Improvement",
-    image: "/img/performance.jpg",
+    image: "/img/performance.webp",
     tags: "Process redesign · Cost optimisation · Productivity · Performance management",
     summary:
       "Improve the way the business operates by addressing inefficiencies, strengthening processes and making performance more measurable.",
@@ -85,7 +90,7 @@ export const services = [
   {
     slug: "people-and-change",
     title: "People & Change",
-    image: "/img/people.jpg",
+    image: "/img/people.webp",
     tags: "Organisation design · HR strategy · Leadership · Change management",
     summary:
       "Align organisational structure, leadership, talent and workplace practices with the needs of the business.",
@@ -109,7 +114,7 @@ export const services = [
   {
     slug: "digital-and-innovation",
     title: "Digital & Innovation",
-    image: "/img/digital.jpg",
+    image: "/img/digital.webp",
     tags: "Digital strategy · ERP/CRM advisory · Automation · Innovation",
     summary:
       "Identify where technology, automation and new ways of working can solve business problems and unlock new opportunities.",
@@ -132,7 +137,7 @@ export const services = [
   {
     slug: "finance-and-accounting",
     title: "Finance & Accounting",
-    image: "/img/finance.jpg",
+    image: "/img/finance.webp",
     tags: "Financial planning · Management reporting · Cost control · Accounting processes",
     summary:
       "Strengthen financial discipline, reporting and management information to support informed decisions and business control.",
@@ -160,7 +165,7 @@ export const services = [
   {
     slug: "managed-services",
     title: "Managed Services",
-    image: "/img/managed.jpg",
+    image: "/img/managed.webp",
     tags: "Finance operations · HR administration · MIS support · Process coordination",
     summary:
       "Help businesses organise and operate selected support functions through defined processes, appropriate expertise and clear service standards.",
