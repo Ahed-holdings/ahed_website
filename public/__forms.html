@@ -1,0 +1,32 @@
+<!doctype html>
+<!--
+  Netlify Forms: a static copy of the contact form so Netlify detects it at deploy time (the real form is rendered
+  by React in the browser, which Netlify's build-time scan can't see). The React form posts to this file's URL.
+  Keep the field names in sync with src/components/sections/contact-form.jsx.
+  Leads are emailed by Netlify: Netlify UI → Forms → "contact" → Form notifications → Email → ceo@ahed.in.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
+    <title>Contact form</title>
+  </head>
+  <body>
+    <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="contact" />
+      <input name="subject" />
+      <input name="bot-field" />
+      <input name="name" />
+      <input name="company" />
+      <input name="designation" />
+      <input name="email" type="email" />
+      <input name="phone" />
+      <select name="industry"><option></option></select>
+      <select name="service"><option></option></select>
+      <textarea name="challenge"></textarea>
+      <input name="method" type="radio" value="email" />
+      <input name="method" type="radio" value="phone" />
+      <input name="method" type="radio" value="whatsapp" />
+    </form>
+  </body>
+</html>

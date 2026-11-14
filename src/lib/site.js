@@ -6,10 +6,10 @@ export const site = {
   /** Default meta description (home page and any page without its own) */
   description:
     "We work with business leaders to sharpen strategy, strengthen performance and develop the people, processes and systems needed for sustainable growth.",
-  // TODO: replace placeholders once the client confirms them.
-  email: "hello@yourdomain.com",
-  phone: "+000 00 000 0000",
-  phoneHref: "tel:+0000000000",
+  email: "ceo@ahed.in",
+  phone: "+91 91880 11117",
+  phoneHref: "tel:+919188011117",
+  // TODO: replace once the client confirms it.
   location: "City, Country",
 };
 
