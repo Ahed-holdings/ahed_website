@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, CircleAlert, CircleCheck, LoaderCircle, Mail, MessageCircle, Phone } from "lucide-react";
+import { checkEmailDomain, suggestEmail } from "@/lib/email-check";
 import { services, site } from "@/lib/site";
 import { ButtonArrow, buttonClass, cx, Eyebrow } from "../ui";
 
@@ -24,7 +25,19 @@ const errorText = {
   name: "Please enter your name.",
   company: "Please enter your company name.",
   email: "Please enter a valid email address.",
+  phone: "Please enter a valid phone number, including the country code.",
+  industry: "Please select your industry.",
+  service: "Please select a service, or “Not sure yet”.",
   challenge: "Please describe the challenge briefly.",
+};
+
+/** Shown when the part after @ doesn't exist or can't receive email. */
+const domainError = "This email address can’t receive email. Please check it.";
+
+/** Phone: digits with optional +, spaces, dashes and brackets; 8–15 digits in total. */
+const phoneOk = (value) => {
+  const digits = value.replace(/\D/g, "").length;
+  return /^\+?[\d\s()-]+$/.test(value.trim()) && digits >= 8 && digits <= 15;
 };
 
 /** Text inputs, selects and the textarea: 48px tall, hairline border, bronze focus ring, brick-red when invalid. */
@@ -85,6 +98,10 @@ function whatsappLink(data) {
  * Preferred contact method "WhatsApp": the same click also opens WhatsApp (wa.me) to the site's number with the
  * enquiry typed in, so the visitor only taps Send. Opened right away, inside the click, because browsers block
  * pop-ups opened later; the email lead is still sent as a backup, and the success message links to WhatsApp again.
+ * Required: name, company, phone, industry, service, challenge. Email is optional (required only when "Email" is
+ * the preferred contact method); when filled in it gets two extra checks
+ * (src/lib/email-check.js): a "Did you mean …?" suggestion for provider typos, and a lookup that the domain exists
+ * and accepts email (run when leaving the field, and again on submit if still unknown).
  * In `npm run dev` there is no Netlify, so the post is skipped and the success message shows (payload logged).
  */
 export function ContactForm() {
@@ -92,6 +109,24 @@ export function ContactForm() {
   const [status, setStatus] = useState("idle");
   // Set when the visitor chose WhatsApp: the link shown again in the success message
   const [whatsappUrl, setWhatsappUrl] = useState(null);
+  // "Did you mean name@gmail.com?" for the email field
+  const [emailSuggestion, setEmailSuggestion] = useState(null);
+
+  const showError = (form, name, message) => {
+    setErrors((current) => ({ ...current, [name]: message }));
+    form.elements.namedItem(name)?.focus();
+  };
+
+  /** Email field left: suggest a typo fix, and check the domain in the background (error shown if it fails). */
+  function onEmailBlur(e) {
+    const input = e.currentTarget;
+    const value = input.value;
+    if (!value || !input.validity.valid) return;
+    setEmailSuggestion(suggestEmail(value));
+    Promise.resolve(checkEmailDomain(value)).then((ok) => {
+      if (!ok && input.value === value) setErrors((current) => ({ ...current, email: domainError }));
+    });
+  }
 
   function onSubmit(e) {
     e.preventDefault();
@@ -100,12 +135,39 @@ export function ContactForm() {
     for (const el of Array.from(form.elements)) {
       if (el.name && !el.validity.valid) next[el.name] = errorText[el.name] ?? "Please check this field.";
     }
+    const phone = form.elements.namedItem("phone");
+    if (!next.phone && !phoneOk(phone.value)) next.phone = errorText.phone;
+    // Email is optional, except when it is the preferred way to be contacted
+    const emailValue = form.elements.namedItem("email").value.trim();
+    if (!next.email && !emailValue && form.elements.namedItem("method").value === "email") {
+      next.email = "Please add your email address, or choose phone or WhatsApp below.";
+    }
     setErrors(next);
     const firstInvalid = Object.keys(next)[0];
     if (firstInvalid) {
       form.elements.namedItem(firstInvalid)?.focus();
       return;
     }
+
+    const domainOk = emailValue ? checkEmailDomain(emailValue) : true; // left empty: nothing to check
+    if (domainOk === false) return showError(form, "email", domainError);
+    if (domainOk === true) return send(form, null);
+
+    // Domain still being checked. WhatsApp must open inside this click or browsers block it, so open the tab now
+    // and fill it in (or close it) once the answer is in.
+    const placeholder =
+      form.elements.namedItem("method").value === "whatsapp" ? window.open("", "_blank") : null;
+    setStatus("submitting");
+    domainOk.then((ok) => {
+      if (ok) return send(form, placeholder);
+      placeholder?.close();
+      setStatus("idle");
+      showError(form, "email", domainError);
+    });
+  }
+
+  /** Opens WhatsApp when chosen (in `win` if a tab was already opened) and posts the lead to Netlify Forms. */
+  function send(form, win) {
     setStatus("submitting");
     const data = new FormData(form);
     const body = new URLSearchParams(data).toString();
@@ -113,8 +175,13 @@ export function ContactForm() {
     if (data.get("method") === "whatsapp") {
       const url = whatsappLink(data);
       setWhatsappUrl(url);
-      const win = window.open(url, "_blank");
-      if (win) win.opener = null;
+      if (win) {
+        win.opener = null;
+        win.location.href = url;
+      } else {
+        const opened = window.open(url, "_blank");
+        if (opened) opened.opener = null;
+      }
     } else {
       setWhatsappUrl(null);
     }
@@ -156,6 +223,8 @@ export function ContactForm() {
       {errors[name] ? (
         <p id={`${name}-error`} className="text-sm text-destructive">
           {errors[name]}
+          {/* `hintWithError`: keep the hint (e.g. "Did you mean …?") visible under the error */}
+          {opts.hintWithError && opts.hint ? <span className="block text-muted-foreground">{opts.hint}</span> : null}
         </p>
       ) : opts.hint ? (
         <p id={`${name}-hint`} className="text-sm text-muted-foreground">
@@ -176,7 +245,7 @@ export function ContactForm() {
   /** Native select with the browser arrow replaced by a Lucide chevron. */
   const select = (name, placeholder, options) => (
     <div className="relative">
-      <select {...a11y(name)} defaultValue="" className={cx(control, "cursor-pointer appearance-none pr-11")}>
+      <select {...a11y(name)} required defaultValue="" className={cx(control, "cursor-pointer appearance-none pr-11")}>
         <option value="">{placeholder}</option>
         {options}
       </select>
@@ -246,14 +315,39 @@ export function ContactForm() {
           "email",
           "Email",
           <input
-            {...a11y("email")}
+            {...a11y("email", Boolean(emailSuggestion))}
+            onInput={() => {
+              clearError("email");
+              setEmailSuggestion(null);
+            }}
+            onBlur={onEmailBlur}
             type="email"
-            required
             autoComplete="email"
             placeholder="name@company.com"
             className={control}
           />,
-          { required: true },
+          {
+            hintWithError: true,
+            hint: emailSuggestion && (
+              <>
+                Did you mean{" "}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    const input = e.currentTarget.form.elements.namedItem("email");
+                    input.value = emailSuggestion;
+                    setEmailSuggestion(null);
+                    clearError("email");
+                    input.focus();
+                  }}
+                  className="cursor-pointer font-semibold text-primary underline underline-offset-4 hover:text-primary-hover"
+                >
+                  {emailSuggestion}
+                </button>
+                ?
+              </>
+            ),
+          },
         )}
         {field(
           "phone",
@@ -261,11 +355,12 @@ export function ContactForm() {
           <input
             {...a11y("phone", true)}
             type="tel"
+            required
             autoComplete="tel"
             placeholder="+91 00000 00000"
             className={control}
           />,
-          { hint: "Include your country code.", full: true },
+          { hint: "Include your country code.", full: true, required: true },
         )}
 
         <div className="pt-2 sm:col-span-2">
@@ -279,6 +374,7 @@ export function ContactForm() {
             "Select an industry",
             industries.map((i) => <option key={i}>{i}</option>),
           ),
+          { required: true },
         )}
         {field(
           "service",
@@ -287,6 +383,7 @@ export function ContactForm() {
             ...services.map((s) => <option key={s.slug}>{s.title}</option>),
             <option key="unsure">Not sure yet</option>,
           ]),
+          { required: true },
         )}
         {field(
           "challenge",
