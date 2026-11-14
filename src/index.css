@@ -1,0 +1,207 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Ahed – Everything Ahead · design tokens
+   Palette: "Executive Navy & Gold" (brand recommendation, Nov 2026).
+     Navy  #0B1F3B · Gold #C4A037 · Off-white #F8FAFC
+   Brand gold is only 2.5:1 on white, so it is never used for text on light
+   backgrounds. Roles:
+     --gold      brand gold: CTA fills, rules, dots, hover borders, text on navy
+     --primary   deepened bronze-gold (4.9:1 on white) for text, icons and links
+                 on light backgrounds. Hue pulled warmer (80°) so it never
+                 reads olive/green when darkened.
+   Hex equivalents in comments. All text pairings meet WCAG AA.
+   ========================================================================== */
+
+:root {
+  --background: oklch(100% 0 0);                 /* #FFFFFF */
+  --foreground: oklch(24% 0.06 257.3);           /* #0B1F3B executive navy */
+  --card: var(--background);
+  --muted: oklch(98.4% 0.003 247.9);             /* #F8FAFC off-white sections */
+  --muted-foreground: oklch(48.1% 0.035 256.1);  /* #515F72 body copy (6.5:1) */
+
+  --gold: oklch(72% 0.127 89.4);                 /* #C4A037 brand gold */
+  --gold-hover: oklch(66% 0.12 85.9);            /* #B38C2A */
+  --gold-foreground: var(--foreground);          /* navy on gold, 6.6:1 */
+
+  --primary: oklch(55% 0.105 80.7);              /* #916A18 bronze-gold text/icons (4.9:1) */
+  --primary-hover: oklch(46% 0.09 79);           /* deeper bronze */
+  --primary-foreground: oklch(100% 0 0);
+  --accent-soft: oklch(97.2% 0.018 86);          /* #FBF5E8 warm gold tint */
+  --border: oklch(91.4% 0.012 259.8);            /* #DEE3EB hairlines */
+  --ring: var(--primary);
+  --destructive: oklch(50% 0.13 25);             /* muted brick red, form errors only */
+
+  /* Dark sections (navy) */
+  --inverse: oklch(24% 0.06 257.3);              /* #0B1F3B */
+  --inverse-raised: oklch(29.2% 0.062 256.6);    /* #162C4A */
+  --inverse-foreground: oklch(100% 0 0);
+  --inverse-muted: oklch(76% 0.031 257.8);       /* #A5B2C5 (7.7:1 on navy) */
+  --inverse-accent: var(--gold);                 /* gold on navy, 6.6:1 */
+  --inverse-border: oklch(34.1% 0.06 256.4);     /* #233957 */
+
+  --gutter: clamp(16px, 4vw, 40px);
+}
+
+/* Bronze focus rings are too dark on navy: switch to gold inside dark sections */
+[data-inverse] { --ring: var(--gold); }
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-gold: var(--gold);
+  --color-gold-hover: var(--gold-hover);
+  --color-gold-foreground: var(--gold-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-inverse: var(--inverse);
+  --color-inverse-raised: var(--inverse-raised);
+  --color-inverse-foreground: var(--inverse-foreground);
+  --color-inverse-muted: var(--inverse-muted);
+  --color-inverse-accent: var(--inverse-accent);
+  --color-inverse-border: var(--inverse-border);
+
+  --font-sans: "Manrope Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@theme {
+  /* Breakpoints match the original layout: 640 / 900 / 1080 */
+  --breakpoint-md: 56.25rem;
+  --breakpoint-lg: 67.5rem;
+
+  /* Type scale */
+  /* Home hero headline: grows with the width, capped by the height (10svh) so it still fits short laptops.
+     Reduced on request: ~80px at 1440 (was ~104px), ~36px on phones (was ~44px). */
+  --text-display: clamp(2rem, min(1.2rem + 4.5vw, 10svh), 5rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.04em;
+  --text-h1: clamp(2.3rem, 1.6rem + 2.6vw, 3.5rem);
+  --text-h1--line-height: 1.08;
+  --text-h1--letter-spacing: -0.03em;
+  --text-h2: clamp(1.9rem, 1.4rem + 1.8vw, 2.75rem);
+  --text-h2--line-height: 1.12;
+  --text-h2--letter-spacing: -0.025em;
+  --text-h3: 1.375rem;
+  --text-h3--line-height: 1.3;
+  --text-h3--letter-spacing: -0.01em;
+  --text-h4: 1.125rem;
+  --text-h4--line-height: 1.35;
+  --text-h4--letter-spacing: -0.005em;
+  --text-lead: 1.1875rem;
+  --text-lead--line-height: 1.6;
+  /* Home hero intro line */
+  --text-lead-lg: clamp(1.0625rem, 0.95rem + 0.4vw, 1.25rem);
+  --text-lead-lg--line-height: 1.6;
+  --text-eyebrow: 0.8125rem;
+  --text-eyebrow--letter-spacing: 0.08em;
+  --text-btn: 0.9375rem;
+
+  /* Shapes */
+  --radius-btn: 8px;
+  --radius-card: 12px;
+  --radius-media: 16px;
+  --shadow-hover: 0 18px 40px -12px rgb(11 31 59 / 0.16);
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-fade-up: fade-up 800ms var(--ease-out-expo) both;
+
+  @keyframes fade-up {
+    from { opacity: 0; translate: 0 12px; }
+  }
+  @keyframes reveal-up {
+    from { opacity: 0; translate: 0 24px; }
+  }
+}
+
+/* Card stack autoplay progress bar (challenge-stack.jsx). Outside @theme: Tailwind only emits @theme keyframes
+   that an --animate-* token uses. */
+@keyframes progress-fill {
+  from { scale: 0 1; }
+  to { scale: 1 1; }
+}
+
+/* `inverse:` styles anything inside a dark (navy) section: <section data-inverse> */
+@custom-variant inverse (&:where([data-inverse], [data-inverse] *));
+
+/* `short:` = side-by-side layout (md+) on a short screen (e.g. 1366×768 laptops), where the
+   full-screen hero needs tighter type and spacing to fit in one view */
+@custom-variant short (@media (min-width: 56.25rem) and (max-height: 50rem));
+
+/* Home hero headline, two lines ("Want to Build a Stronger Business?" / "AHED Prepare you for What's Next.").
+   From sm each line must fit on one line: the longer one is ~15.2em wide, so the size is capped at
+   1/15.5 of the hero container's width (100cqi; the container has `@container`). Re-measure if the wording changes. */
+@utility text-hero-title {
+  font-size: var(--text-display);
+  line-height: var(--text-display--line-height);
+  letter-spacing: var(--text-display--letter-spacing);
+  font-weight: 600;
+  @media (width >= 40rem) {
+    font-size: min(var(--text-display), 100cqi / 15.5);
+  }
+}
+
+/* First section of a page (the navy hero): sits behind the fixed header, which is transparent at the
+   top of the page, with the header's height as padding so its content starts below it.
+   Pair with `min-h-svh` for a full-screen hero: the padding is part of the height.
+   78px = the header's height (logo + Menu button row). */
+@utility under-header {
+  padding-top: 78px;
+}
+
+/* Page container and section rhythm */
+@utility container-page {
+  width: min(100% - 2 * var(--gutter), 1200px);
+  margin-inline: auto;
+}
+@utility section-y {
+  padding-block: clamp(72px, 9vw, 112px);
+}
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  /* Scrollbars hidden site-wide (on request); scrolling itself (wheel, trackpad, touch, keyboard) still works.
+     Firefox / current Chrome & Edge: scrollbar-width. Safari and older Chromium: the ::-webkit-scrollbar rule. */
+  * { scrollbar-width: none; }
+  *::-webkit-scrollbar { display: none; }
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4 { @apply font-semibold text-balance; }
+  p { text-wrap: pretty; }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  /* Scroll reveal: <ScrollReveal /> sets data-visible when the element enters
+     the viewport. Uses an animation (fill: backwards) rather than a transition
+     so it never overrides a card's own hover transition. */
+  [data-reveal]:not([data-visible]),
+  [data-stagger] > :not([data-visible]) { opacity: 0; }
+  [data-reveal][data-visible],
+  [data-stagger] > [data-visible] {
+    animation: reveal-up 700ms var(--ease-out-expo) var(--d, 0ms) backwards;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

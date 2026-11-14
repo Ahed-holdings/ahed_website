@@ -1,0 +1,107 @@
+# Netlify configuration for the Ahed website.
+# Vite + React single-page app: `npm run build` writes the site to /dist. React Router handles
+# every route in the browser, so all other paths fall back to index.html (last rule below).
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Vite 8 needs Node 20.19+ or 22.12+
+  NODE_VERSION = "22"
+  # This Netlify project was first set up when the site used Next.js, so Netlify still adds its Next.js
+  # Runtime plugin (@netlify/plugin-nextjs), which fails on a Vite build ("publish directory does not contain
+  # expected Next.js build output"). This switches that plugin off. Also remove it in the Netlify UI:
+  # Project configuration → Build & deploy → Build plugins (and set the framework to Vite / none).
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+
+# Vite bundles in /assets have a content hash in their file names and never change: cache for a year
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Photos and logos: cache for a week, then revalidate
+[[headers]]
+  for = "/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, must-revalidate"
+
+# Basic security headers for every page
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Old static-site URLs: service-*.html moved to /services/<slug>, other pages lost their .html
+
+[[redirects]]
+  from = "/service-strategy-advisory.html"
+  to = "/services/strategy-advisory"
+  status = 301
+
+[[redirects]]
+  from = "/service-performance-improvement.html"
+  to = "/services/performance-improvement"
+  status = 301
+
+[[redirects]]
+  from = "/service-people-and-change.html"
+  to = "/services/people-and-change"
+  status = 301
+
+[[redirects]]
+  from = "/service-digital-and-innovation.html"
+  to = "/services/digital-and-innovation"
+  status = 301
+
+[[redirects]]
+  from = "/service-finance-and-accounting.html"
+  to = "/services/finance-and-accounting"
+  status = 301
+
+[[redirects]]
+  from = "/service-managed-services.html"
+  to = "/services/managed-services"
+  status = 301
+
+[[redirects]]
+  from = "/about.html"
+  to = "/about"
+  status = 301
+
+[[redirects]]
+  from = "/services.html"
+  to = "/services"
+  status = 301
+
+[[redirects]]
+  from = "/how-we-work.html"
+  to = "/how-we-work"
+  status = 301
+
+[[redirects]]
+  from = "/industries.html"
+  to = "/industries"
+  status = 301
+
+[[redirects]]
+  from = "/insights.html"
+  to = "/insights"
+  status = 301
+
+[[redirects]]
+  from = "/contact.html"
+  to = "/contact"
+  status = 301
+
+# Single-page app: every other URL loads index.html and React Router shows the right page
+# (or its 404 page). Must stay last: Netlify applies the first matching rule, and files that
+# exist (assets, images, favicons) are served before this rule is checked.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
