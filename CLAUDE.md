@@ -14,9 +14,15 @@ Core message on every page: *we help businesses make the transition from ambitio
 - Images: `Image` in `src/components/image.jsx`, a plain `<img>` (lazy by default; `fill` covers a positioned parent, `priority` for first-screen images).
 - Page titles/descriptions: render `<PageMeta title description />` at the top of each page (`src/components/layout/page-meta.jsx`).
   It updates the tags in `index.html`, which hold the home-page defaults crawlers see before JavaScript runs.
-- `npm run dev` → http://localhost:3000 · `npm run build` → `dist/` · `npm run preview` serves `dist/` on :4173.
+- `npm run dev` → http://localhost:3000 · `npm run build` → `dist/` · `npm run preview` serves `dist/` on :4173
+  with the same security headers as Netlify (read from `netlify.toml` in `vite.config.js`): test CSP changes there.
+- `npm run build` also writes `robots.txt` and `sitemap.xml` (`seoFiles` in `vite.config.js`, page list there: add new
+  pages to it). Address = Netlify's `URL` env (the custom domain once connected), else `site.url` in `lib/site.js`.
+- Caching (`netlify.toml`): `/assets/*` 1 year immutable (hashed names); `/img/*` 1 day then revalidate (give a
+  replaced photo a new file name to show it at once); HTML/robots/sitemap always revalidated (Netlify default).
 - `@/` is an alias for `src/` (`vite.config.js`, `jsconfig.json` for editors).
-- Deploy: **Netlify**, configured in `netlify.toml` (build `npm run build`, publish `dist`, Node 22, headers, old-URL redirects,
+- Deploy: **Netlify**, configured in `netlify.toml` (build `npm run build`, publish `dist`, Node 22, headers incl. a strict
+  Content-Security-Policy (any new outside script/font/API must be added there first), old-URL redirects,
   `NETLIFY_NEXT_PLUGIN_SKIP=true` because the Netlify project was first set up for Next.js and still adds its Next.js plugin,
   and a last `/* → /index.html 200` rule so every route works on reload; keep that rule last).
 - SEO trade-off of the SPA: pages are rendered in the browser. Google renders JavaScript, but social-card scrapers
@@ -44,7 +50,7 @@ src/
                                 insights-list, contact-form
   lib/site.js                   Site name, default description, nav, contact placeholders, all service content
 public/
-  img/                          Photos + logo.webp (navy & gold) / logo-inverse.webp (white letters, for dark)
+  img/                          Photos (WebP, quality 80) + logo.webp (navy & gold) / logo-inverse.webp (white letters, for dark)
   favicon.ico, icon.png, apple-icon.png   The logo's "A" + gold swoosh on a navy tile
 docs/
   content.md                    Source copy from the client's content document

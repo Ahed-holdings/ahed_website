@@ -202,7 +202,7 @@ export default function HomePage() {
             </div>
             {/* <div className="relative aspect-[460/360] overflow-hidden rounded-media">
               <Image
-                src="/img/managed.jpg"
+                src="/img/managed.webp"
                 alt=""
                 fill
                 className="object-cover"

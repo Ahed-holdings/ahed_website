@@ -3,12 +3,12 @@
 ## Photos in `public/img/` (from the client's content document)
 | File | Used on |
 |---|---|
-| strategy.jpg | Strategy Advisory card + page, Services hero, hero slide 1, CTA band |
-| performance.jpg | Performance Improvement, hero slide 2, How We Work hero, articles |
-| people.jpg | People & Change, hero slide 3, About CTA, articles |
-| digital.jpg | Digital & Innovation, Insights hero, articles |
-| finance.jpg | Finance & Accounting, About hero, articles |
-| managed.jpg | Managed Services, Home "Who we work with", Industries hero |
+| strategy.webp | Strategy Advisory card + page, Services hero, hero slide 1, CTA band |
+| performance.webp | Performance Improvement, hero slide 2, How We Work hero, articles |
+| people.webp | People & Change, hero slide 3, About CTA, articles |
+| digital.webp | Digital & Innovation, Insights hero, articles |
+| finance.webp | Finance & Accounting, About hero, articles |
+| managed.webp | Managed Services, Home "Who we work with", Industries hero |
 
 These came embedded in the content document. Several look like images taken from other companies' websites, so **confirm the licence or replace them before launch**.
 To swap a photo, replace the file in `public/img/` with the same name, or change the path where it's used (`src/lib/site.js` for service images).

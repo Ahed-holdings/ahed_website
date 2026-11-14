@@ -21,20 +21,33 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Photos and logos: cache for a week, then revalidate
+# Photos and logos keep their file names, so a replaced photo would show its old version until this runs out:
+# 1 day, then the browser checks for a new one. (Use a new file name to have a change show straight away.)
+# Pages (HTML), robots.txt and sitemap.xml keep Netlify's default: always re-checked, so deploys show at once.
 [[headers]]
   for = "/img/*"
   [headers.values]
-    Cache-Control = "public, max-age=604800, must-revalidate"
+    Cache-Control = "public, max-age=86400, must-revalidate"
 
-# Basic security headers for every page
+# Security headers for every page.
+# Content-Security-Policy: only this site's own scripts, styles, fonts and images may load.
+#   style-src 'unsafe-inline': the site menu renders a <style> tag. font-src data:: some Manrope subsets are
+#   inlined in the CSS. connect-src dns.google: the contact form's email-domain check (src/lib/email-check.js).
+#   WhatsApp (wa.me) links are normal navigation, not covered by this. Add any new outside service here first.
 [[headers]]
   for = "/*"
   [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://dns.google; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# The hidden copy of the contact form (for Netlify Forms) is not a page: keep it out of search results
+[[headers]]
+  for = "/__forms.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
 
 # Old static-site URLs: service-*.html moved to /services/<slug>, other pages lost their .html
 
