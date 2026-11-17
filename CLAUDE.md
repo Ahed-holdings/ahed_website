@@ -242,6 +242,8 @@ Brand gold is only 2.5:1 on white, so **never use `gold` for text on light backg
 - [ ] Swap in better/licensed photos where needed (see `docs/images.md`). Some home/about images reuse service photos.
 - [ ] Privacy Policy and Terms pages.
 - [x] Favicon (`public/icon.png`, `apple-icon.png`, `favicon.ico`) and per-page title/description metadata.
-- [ ] Open Graph image (`public/og-image.png` + `og:image` and `og:url` in `index.html`) and the final site URL.
+- [x] Custom domain: **https://ahed.in** (GoDaddy DNS: A `@` → 75.2.60.5, CNAME `www` → ahed-holdings.netlify.app;
+  nameservers and the MX/SPF email records stay at GoDaddy). Netlify primary domain ahed.in, www redirects, Let's Encrypt.
+- [ ] Open Graph image (`public/og-image.png` + `og:image` and `og:url` in `index.html`).
 - [ ] Managed Services: only list offerings that can genuinely be delivered (client's own note).
 - [ ] Finance page: keep the note distinguishing advisory from statutory audit / regulated tax & legal work.
