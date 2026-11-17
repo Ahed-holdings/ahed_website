@@ -34,7 +34,7 @@ export default function ContactPage() {
       />
 
       {/* Off-white section: white form card on the left, navy contact panel on the right (pinned while scrolling, md+) */}
-      <section className="bg-muted pt-[clamp(56px,7vw,88px)] pb-[clamp(72px,9vw,112px)]">
+      <section className="bg-muted pt-[clamp(40px,5vw,64px)] pb-[clamp(48px,6vw,80px)]">
         <div className="container-page grid items-start gap-8 md:grid-cols-[1.4fr_0.6fr] lg:grid-cols-[1.5fr_0.75fr] lg:gap-12">
           <ContactForm />
 
@@ -42,15 +42,15 @@ export default function ContactPage() {
             data-reveal
             data-inverse
             style={delay(100)}
-            className="grid gap-8 rounded-media bg-inverse p-7 text-inverse-foreground sm:p-9 md:sticky md:top-[110px]"
+            className="grid gap-6 rounded-media bg-inverse p-6 text-inverse-foreground sm:p-7 md:sticky md:top-[100px]"
           >
-            <div className="grid gap-3">
+            <div className="grid gap-2">
               <Eyebrow>Direct contact</Eyebrow>
-              <h2 className="text-h3">Prefer to talk first?</h2>
+              <h2 className="text-h4">Prefer to talk first?</h2>
               <p className="text-sm text-inverse-muted">Reach us directly by email, phone or WhatsApp.</p>
             </div>
 
-            <ul className="grid gap-5">
+            <ul className="grid gap-4">
               <li className="flex items-start gap-3.5">
                 <Mail aria-hidden strokeWidth={1.5} className="mt-0.5 size-5 shrink-0 text-inverse-accent" />
                 <div className="grid gap-0.5">
@@ -79,9 +79,9 @@ export default function ContactPage() {
               </li>
             </ul>
 
-            <div className="grid gap-4 border-t border-inverse-border pt-7">
+            <div className="grid gap-3 border-t border-inverse-border pt-5">
               <h3 className="text-sm font-semibold tracking-wide">What happens next</h3>
-              <ol className="grid gap-4">
+              <ol className="grid gap-3">
                 {nextSteps.map((s, i) => (
                   <li key={s.title} className="grid grid-cols-[auto_1fr] gap-3">
                     <span className="grid size-7 place-items-center rounded-full border border-inverse-accent text-xs font-semibold text-inverse-accent">

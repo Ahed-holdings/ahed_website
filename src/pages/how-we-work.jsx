@@ -52,7 +52,6 @@ export default function HowWeWorkPage() {
         <div className="container-page">
           <SectionHead eyebrow="Engagement models" title="Choose the way of working that fits.">
             <p>Scope, duration, deliverables and fees are agreed for each assignment.</p>
-            <p className="text-sm">Hover, tap or tab to a model to see what it covers.</p>
           </SectionHead>
           <EngagementMenu models={models} />
         </div>

@@ -23,10 +23,32 @@ export const site = {
 export const mainNav = [
   { href: "/about", label: "About Us" },
   { href: "/services", label: "Services" },
-  { href: "/how-we-work", label: "How We Work" },
+  { href: "/how-we-work", label: "How we work" },
   { href: "/industries", label: "Industries" },
   { href: "/insights", label: "Insights" },
   { href: "/contact", label: "Contact" },
+];
+
+/**
+ * About page "Our team": three people, no photos (by request). Order = order on the page.
+ * TODO: replace the placeholders with the client's names, roles and short profiles (2–3 sentences each).
+ */
+export const team = [
+  {
+    name: "[Team member name]",
+    role: "[Role / title]",
+    bio: "[Short profile: professional background, years of experience and the areas they lead on. Two or three sentences.]",
+  },
+  {
+    name: "[Team member name]",
+    role: "[Role / title]",
+    bio: "[Short profile: professional background, years of experience and the areas they lead on. Two or three sentences.]",
+  },
+  {
+    name: "[Team member name]",
+    role: "[Role / title]",
+    bio: "[Short profile: professional background, years of experience and the areas they lead on. Two or three sentences.]",
+  },
 ];
 
 export const companyNav = [

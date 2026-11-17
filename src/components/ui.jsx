@@ -38,8 +38,9 @@ export const muted = "text-muted-foreground inverse:text-inverse-muted";
 const buttonVariants = {
   primary: "border-transparent bg-gold text-gold-foreground hover:bg-gold-hover",
   dark: "border-transparent bg-inverse text-inverse-foreground hover:bg-gold hover:text-gold-foreground",
-  secondary: "border-border bg-background text-foreground hover:border-primary hover:text-primary",
-  light: "border-transparent bg-background text-foreground hover:bg-accent-soft hover:text-primary",
+  // `secondary` and `light` were white buttons; on request every white CTA is now brand gold, like `primary`
+  secondary: "border-transparent bg-gold text-gold-foreground hover:bg-gold-hover",
+  light: "border-transparent bg-gold text-gold-foreground hover:bg-gold-hover",
   ghostLight: "border-white/30 text-inverse-foreground hover:border-white",
 };
 
@@ -97,12 +98,13 @@ export function LinkArrow({ children, href, inCard, className }) {
 
 /* ---------- Layout ---------- */
 
-export function Section({ tone = "default", className, children, ...rest }) {
+/** `compact`: tighter top/bottom padding (section-y-sm instead of section-y). */
+export function Section({ tone = "default", compact, className, children, ...rest }) {
   return (
     <section
       data-inverse={tone === "inverse" ? "" : undefined}
       className={cx(
-        "section-y",
+        compact ? "section-y-sm" : "section-y",
         tone === "muted" && "bg-muted",
         tone === "inverse" && "bg-inverse text-inverse-foreground",
         className,
@@ -146,7 +148,7 @@ const iconCardIcon =
 export function IconCard({ icon: Icon, title, children, eyebrow, large, compact }) {
   if (compact) {
     return (
-      <article className={cx(cardClass, "grid content-start gap-3 px-6 py-6")}>
+      <article className={cx(cardClass, "grid content-start gap-3 px-6 py-6 inverse:text-inverse-foreground")}>
         <div className="flex items-start gap-3">
           <Icon aria-hidden strokeWidth={1.5} className={cx("mt-0.5 size-6 shrink-0", iconCardIcon)} />
           <h3 className="text-h4">{title}</h3>
@@ -156,7 +158,13 @@ export function IconCard({ icon: Icon, title, children, eyebrow, large, compact 
     );
   }
   return (
-    <article className={cx(cardClass, "grid content-start gap-3", large ? "p-8 sm:p-11" : "px-7 py-8")}>
+    <article
+      className={cx(
+        cardClass,
+        "grid content-start gap-3 inverse:text-inverse-foreground",
+        large ? "p-8 sm:p-11" : "px-7 py-8",
+      )}
+    >
       <Icon aria-hidden strokeWidth={1.5} className={cx("mb-3.5 size-7", iconCardIcon)} />
       {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
       <h3 className={large ? "text-h3" : "text-h4"}>{title}</h3>
@@ -207,15 +215,21 @@ export const principles = [
   },
 ];
 
-export function Feature({ title, children }) {
+/** `compact`: tighter padding and gaps (dense lists, e.g. home "Why work with us?"). */
+export function Feature({ title, children, compact }) {
   return (
-    <div className="flex gap-[18px] border-t border-border py-[26px] inverse:border-inverse-border">
+    <div
+      className={cx(
+        "flex border-t border-border inverse:border-inverse-border",
+        compact ? "gap-3.5 py-4" : "gap-[18px] py-[26px]",
+      )}
+    >
       <Check
         aria-hidden
         strokeWidth={2}
         className="mt-0.5 size-[22px] shrink-0 text-primary inverse:text-inverse-accent"
       />
-      <div className="grid gap-1.5">
+      <div className={cx("grid", compact ? "gap-1" : "gap-1.5")}>
         <h3 className="text-h4">{title}</h3>
         <p className={muted}>{children}</p>
       </div>

@@ -42,7 +42,7 @@ const phoneOk = (value) => {
 
 /** Text inputs, selects and the textarea: 48px tall, hairline border, bronze focus ring, brick-red when invalid. */
 const control = cx(
-  "w-full rounded-btn border border-border bg-background px-4 py-3 text-base text-foreground",
+  "w-full rounded-btn border border-border bg-background px-3.5 py-2.5 text-base text-foreground",
   "transition-[border-color,box-shadow,background-color] duration-280 ease-out-expo placeholder:text-muted-foreground/60",
   "hover:border-muted-foreground/40",
   "focus:border-primary focus:ring-4 focus:ring-primary/15 focus:outline-none",
@@ -208,7 +208,7 @@ export function ContactForm() {
   const clearError = (name) => errors[name] && setErrors(({ [name]: _removed, ...rest }) => rest);
 
   const field = (name, label, input, opts = {}) => (
-    <div className={cx("grid content-start gap-2", opts.full && "sm:col-span-2")}>
+    <div className={cx("grid content-start gap-1.5", opts.full && "sm:col-span-2")}>
       <label htmlFor={name} className="text-sm font-semibold text-foreground">
         {label}
         {opts.required ? (
@@ -262,7 +262,7 @@ export function ContactForm() {
       noValidate
       onSubmit={onSubmit}
       data-reveal
-      className="rounded-media border border-border bg-card p-6 shadow-[0_24px_60px_-40px_rgb(11_31_59/0.35)] sm:p-10"
+      className="rounded-media border border-border bg-card p-5 shadow-[0_24px_60px_-40px_rgb(11_31_59/0.35)] sm:p-7"
     >
       {/* Netlify Forms: which form this is, the notification email's subject, and the spam honeypot */}
       <input type="hidden" name="form-name" value={FORM_NAME} />
@@ -273,15 +273,15 @@ export function ContactForm() {
         </label>
       </p>
 
-      <div className="mb-8 grid gap-3 border-b border-border pb-7">
+      <div className="mb-6 grid gap-2 border-b border-border pb-5">
         <Eyebrow>Request an initial discussion</Eyebrow>
-        <h2 className="text-h3">Tell us about your business</h2>
+        <h2 className="text-h4">Tell us about your business</h2>
         <p className="text-muted-foreground">
           A few details are enough to start. Fields marked <span className="text-primary">*</span> are required.
         </p>
       </div>
 
-      <div className="grid gap-x-5 gap-y-6 sm:grid-cols-2">
+      <div className="grid gap-x-4 gap-y-4 sm:grid-cols-2">
         <GroupTitle>About you</GroupTitle>
         {field(
           "name",
@@ -363,7 +363,7 @@ export function ContactForm() {
           { hint: "Include your country code.", full: true, required: true },
         )}
 
-        <div className="pt-2 sm:col-span-2">
+        <div className="pt-1 sm:col-span-2">
           <GroupTitle>Your enquiry</GroupTitle>
         </div>
         {field(
@@ -391,22 +391,22 @@ export function ContactForm() {
           <textarea
             {...a11y("challenge")}
             required
-            rows={5}
+            rows={4}
             placeholder="What is happening in the business, and what would you like to change?"
-            className={cx(control, "min-h-[150px] resize-y leading-relaxed")}
+            className={cx(control, "min-h-[112px] resize-y leading-relaxed")}
           />,
           { full: true, required: true },
         )}
 
-        <fieldset className="grid gap-3 sm:col-span-2">
-          <legend className="mb-3 text-sm font-semibold text-foreground">Preferred contact method</legend>
+        <fieldset className="grid gap-2 sm:col-span-2">
+          <legend className="mb-2 text-sm font-semibold text-foreground">Preferred contact method</legend>
           {/* stacked on phones: three side by side are too narrow for "WhatsApp" */}
-          <div className="grid gap-2.5 sm:grid-cols-3">
+          <div className="grid gap-2 sm:grid-cols-3">
             {methods.map(({ value, label, icon: Icon }, i) => (
               <label
                 key={value}
                 className={cx(
-                  "relative flex cursor-pointer items-center justify-center gap-2 rounded-btn border border-border bg-background px-3 py-3 text-sm font-semibold",
+                  "relative flex cursor-pointer items-center justify-center gap-2 rounded-btn border border-border bg-background px-3 py-2.5 text-sm font-semibold",
                   "transition-colors duration-280 ease-out-expo hover:border-primary",
                   "has-checked:border-inverse has-checked:bg-inverse has-checked:text-inverse-foreground",
                   "has-focus-visible:ring-2 has-focus-visible:ring-ring has-focus-visible:ring-offset-2",
@@ -420,7 +420,7 @@ export function ContactForm() {
           </div>
         </fieldset>
 
-        <div className="grid gap-4 border-t border-border pt-6 sm:col-span-2 sm:flex sm:items-center sm:justify-between">
+        <div className="grid gap-3 border-t border-border pt-5 sm:col-span-2 sm:flex sm:items-center sm:justify-between">
           <p className="text-sm text-muted-foreground sm:max-w-[34ch]">
             Your details are used only to respond to this enquiry.
           </p>

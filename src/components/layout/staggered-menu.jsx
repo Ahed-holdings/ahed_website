@@ -442,7 +442,7 @@ export function StaggeredMenu({
       <style>{`
 /* The panel never scrolls: the 7 links share what is left of the screen height after the header, paddings and
    the footer (--sm-fixed), each link taking ~9 × its font size... (line-height 1.12 + descender room 0.14em = 1.26em,
-   × 7 ≈ 8.8em). Also capped by width (11vw, so "How We Work" fits on phones) and by 3.25rem on large screens. */
+   × 7 ≈ 8.8em). Also capped by width (11vw, so "How we work" fits on phones) and by 3.25rem on large screens. */
 .sm-scope { --sm-fixed: 24rem; }
 .sm-scope .sm-panel-item { font-size: clamp(1.4rem, min(calc((100svh - var(--sm-fixed)) / 9), 11vw), 3.25rem); }
 /* Very short screens (phones in landscape): drop the contact footer, the links get the room */
