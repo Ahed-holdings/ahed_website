@@ -6,7 +6,7 @@ export const site = {
    * Site address, used for sitemap.xml and robots.txt (vite.config.js). On Netlify builds the project's main address
    * (env URL, the custom domain once connected) takes over, so this is only the fallback for local builds.
    */
-  url: "https://ahed-holdings.netlify.app",
+  url: "https://ahed.in",
   tagline: "Helping businesses make the transition from ambition to structured, sustainable performance.",
   /** Default meta description (home page and any page without its own) */
   description:
