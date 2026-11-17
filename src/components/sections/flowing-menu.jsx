@@ -8,6 +8,8 @@
  * - Row labels are also capped by the row width (5.5cqw) so long labels fit on phones instead of being clipped.
  * - Fix: the unmount cleanup now resets the animation-frame id. Upstream kept the cancelled id, so after a remount
  *   (StrictMode in dev) the band never moved or appeared.
+ * - `bandMode="detail"`: the band shows the row's title (bold) and `item.description` standing still, laid out like
+ *   the row (number + text), instead of the scrolling marquee. Default "marquee" keeps the upstream behaviour.
  * - Removed the Next.js-only 'use client' directive.
  */
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -38,6 +40,13 @@ const PART_TEXT =
   'px-[0.4em] text-[clamp(14px,calc(30cqh*var(--flowing-menu-band,1)),96px)] leading-[1.1] font-normal tracking-[-0.025em] whitespace-nowrap';
 const IMAGE =
   'mx-[calc(3.5cqh*var(--flowing-menu-band,1))] block aspect-[2.2/1] h-[calc(56cqh*var(--flowing-menu-band,1))] shrink-0 rounded-full bg-cover bg-center group-data-[shape=circle]/fm:aspect-square group-data-[shape=rounded]/fm:aspect-[3/2] group-data-[shape=rounded]/fm:rounded-[calc(10cqh*var(--flowing-menu-band,1))]';
+// Ahed: static band content for bandMode="detail" (same columns and padding as a left-aligned row)
+const DETAIL =
+  'grid h-full grid-cols-[auto_1fr] items-center gap-4 px-[clamp(16px,4cqw,40px)] text-left';
+const DETAIL_BODY = 'grid min-w-0 gap-[0.15em]';
+const DETAIL_TITLE =
+  'truncate text-[clamp(15px,min(32cqh,4.5cqw),56px)] leading-[1.15] font-bold tracking-[-0.03em]';
+const DETAIL_TEXT = 'line-clamp-2 text-[clamp(12px,min(16cqh,2.1cqw),17px)] leading-[1.35]';
 const FLOAT = 'pointer-events-none invisible absolute inset-0 z-[1] overflow-hidden [clip-path:inset(50%_0_50%_0)]';
 const FLOAT_LAYER = 'absolute top-0 left-0 h-1/4 w-full [container-type:size] will-change-[transform,opacity]';
 
@@ -74,6 +83,7 @@ function FlowingMenu({
   showIndex = false,
   showArrow = false,
   imageShape = 'pill',
+  bandMode = 'marquee',
   intro = true,
   activeIndex,
   onItemClick,
@@ -629,19 +639,29 @@ function FlowingMenu({
                   rows.current[index] = { ...rows.current[index], band: node };
                 }}
               >
-                <div
-                  className={TRACK}
-                  ref={node => {
-                    rows.current[index] = { ...rows.current[index], track: node };
-                  }}
-                >
-                  {Array.from({ length: copies[index] ?? 3 }, (_, copy) => (
-                    <div className={PART} key={copy}>
-                      <span className={PART_TEXT}>{item.marquee ?? item.text}</span>
-                      {item.image && <span className={IMAGE} style={{ backgroundImage: `url(${item.image})` }} />}
-                    </div>
-                  ))}
-                </div>
+                {bandMode === 'detail' ? (
+                  <div className={DETAIL}>
+                    <span className={INDEX}>{showIndex ? String(index + 1).padStart(2, '0') : null}</span>
+                    <span className={DETAIL_BODY}>
+                      <span className={DETAIL_TITLE}>{item.text}</span>
+                      {item.description ? <span className={DETAIL_TEXT}>{item.description}</span> : null}
+                    </span>
+                  </div>
+                ) : (
+                  <div
+                    className={TRACK}
+                    ref={node => {
+                      rows.current[index] = { ...rows.current[index], track: node };
+                    }}
+                  >
+                    {Array.from({ length: copies[index] ?? 3 }, (_, copy) => (
+                      <div className={PART} key={copy}>
+                        <span className={PART_TEXT}>{item.marquee ?? item.text}</span>
+                        {item.image && <span className={IMAGE} style={{ backgroundImage: `url(${item.image})` }} />}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </li>
           );

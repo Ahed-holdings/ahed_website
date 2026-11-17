@@ -3,8 +3,8 @@ import FlowingMenu from "./flowing-menu";
 
 /**
  * How We Work "Engagement models" as a React Bits FlowingMenu in brand colours: a navy panel with one row per
- * model; hovering (or keyboard-focusing) a row slides a gold band over it with the model's description scrolling
- * across (tap on touch screens). Rows are buttons, not links. The menu mounts when it first scrolls into view, so its intro
+ * model; hovering (or keyboard-focusing) a row slides a gold band over it showing the model's name in bold and its
+ * description, standing still (no scrolling text, by request; tap on touch screens). Rows are buttons, not links. The menu mounts when it first scrolls into view, so its intro
  * (rows rise in, lines draw, the band sweeps down once) plays when visitors actually see it.
  */
 export function EngagementMenu({ models }) {
@@ -28,7 +28,7 @@ export function EngagementMenu({ models }) {
   }, []);
 
   // No links: on touch screens a tap must show the description, not leave the page (the CTA below covers contact)
-  const items = models.map((m) => ({ text: m.title, marquee: m.text, description: m.text }));
+  const items = models.map((m) => ({ text: m.title, description: m.text }));
 
   return (
     <div
@@ -42,6 +42,7 @@ export function EngagementMenu({ models }) {
           ariaLabel="Engagement models"
           align="left"
           showIndex
+          bandMode="detail"
           speed={60}
           stretch={0.6}
           magnet={0.25}

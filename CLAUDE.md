@@ -103,16 +103,19 @@ URLs: `/about`, `/services/strategy-advisory`, … (old `*.html` URLs redirect v
   - How We Work "Engagement models": `EngagementMenu` (`sections/engagement-menu.jsx`): React Bits FlowingMenu
     (`sections/flowing-menu.jsx`, JS-TW; changes in its top comment: Lucide arrow so no @hugeicons, `item.to` router
     links, `item.description` for screen readers, labels capped by row width, band text 30cqh). Navy panel, numbered
-    rows showing only the model names; the description appears only on hover/tap/focus, scrolling in the gold band
-    (by request: not shown in the rows). Left aligned. Keep the "Ahed fix" in its unmount cleanup (resets the
+    rows showing only the model names; on hover/tap/focus the gold band shows the model name in bold and its
+    description, standing still (`bandMode="detail"`, added to FlowingMenu; no scrolling marquee, by request). Left aligned. Keep the "Ahed fix" in its unmount cleanup (resets the
     animation-frame id): without it, after a remount (StrictMode in dev) the band never appears. Rows are buttons (no links, so a tap
     on phones shows the description). Mounts when scrolled into view so its intro plays then.
+  - Home "Why work with us?" (navy, "Advice built to be applied…"): compact on request: `<Section compact>`
+    (`section-y-sm` padding) and `<Feature compact>` items (16px rows instead of 26px), smaller gaps.
   - Home "Who we work with" (navy): compact on request. Heading on top, the four audiences as `IconCard compact`
     (icon beside the title, tighter padding) in one row from `lg`, 2 × 2 from `sm`. No photo.
   - Contact: off-white section; white form card (`sections/contact-form.jsx`: header, "About you" / "Your enquiry"
     groups, gold * on required fields and "(optional)" on the rest, Lucide chevron on selects, contact-method chips that
     turn navy when selected and stack below `sm`, navy success message) beside a navy panel (direct contact + "What
-    happens next", first three engagement-cycle steps), pinned while scrolling from `md`.
+    happens next", first three engagement-cycle steps), pinned while scrolling from `md`. Compact by request (hero
+    unchanged): smaller section padding, form card p-5/sm:p-7, h4 headings, 46px fields, 4-row textarea.
     Submissions go to **Netlify Forms**: the React form posts (url-encoded, `form-name=contact`) to
     `public/__forms.html`, a hidden static copy Netlify detects at deploy. Keep the field names of both in sync.
     Honeypot `bot-field`; hidden `subject` sets the notification email subject. Leads are emailed to ceo@ahed.in via
@@ -130,6 +133,21 @@ URLs: `/about`, `/services/strategy-advisory`, … (old `*.html` URLs redirect v
     DNS can't be reached the address is allowed. It can't prove the mailbox exists or belongs to the visitor.
     If the check is still running at submit and WhatsApp is chosen, a blank tab opens inside the click (pop-up rule)
     and is pointed at WhatsApp, or closed if the domain fails.
+  - About "Our purpose" / "Our business philosophy": the two large `IconCard`s are navy on the off-white section
+    on request (`data-inverse` on their grid).
+  - About "Four principles behind every engagement." (What defines us), redesigned on request: heading + short intro
+    left (pinned from lg), one navy panel right split 2 × 2 by hairlines (`gap-px` over `bg-inverse-border`), each cell
+    a gold icon, number 01–04, title and line; on hover a gold rule draws across the top and the title turns gold.
+    Stacks to one column below sm. (IconCard also sets `inverse:text-inverse-foreground` for navy placements.)
+  - About "Collaborative, structured, grounded in reality." (navy): compact on request: `<Section compact>`,
+    engagement cycle left (`Timeline compact`), the six principles right as `<Feature compact>` in two columns from sm.
+  - About "Our team" (replaced the single founder block on request): `SectionHead` + three static white cards
+    (gold rule, name, bronze role, short profile; no photos, no hover lift since they aren't links), three across
+    from `md`, then the "areas of expertise" checklist. Data: `team` in `lib/site.js`.
+  - Insights (`sections/insights-list.jsx`): photo cards on request, like the home service cards: the photo fills
+    each card (`CardPhoto`) under a navy shade darkest at the bottom, with the gold category, white title (gold on
+    hover) and "Read article" on top (`data-inverse` per card). Featured card full width, 400–460px tall; the
+    others 340px, three across from md. Filters unchanged.
   - Inner pages (`PageHero` with an image): side by side from 720px, one screen tall. Without an image: natural height.
   - `short:` variant (md+ and max-height 800px, e.g. 1366×768 laptops) tightens type and spacing so it still fits.
   - Anything white placed inside a navy section must set `text-foreground` (it inherits white), and use
@@ -138,6 +156,10 @@ URLs: `/about`, `/services/strategy-advisory`, … (old `*.html` URLs redirect v
   `cardClass` / `IconCard` switch to raised navy automatically inside them (white title, `inverse-muted` text, white icon
   turning gold on hover). Home section order: hero (navy) → challenge (off-white) → services (white) → who we work
   with (navy) → how we create value (off-white) → why work with us (navy) → CTA band.
+- Buttons: no white CTAs (by request). `primary`, `secondary` and `light` button variants are all brand gold with
+  navy text; `dark` (navy) and `ghostLight` (outline on navy) remain.
+- Footer (`layout/site-footer.jsx`): compact by request (about 40% of a 1440×900 screen, ~360px): tight padding,
+  15px links, logo h-12; from sm to lg the logo sits beside the tagline.
 - CTA band (`sections/cta-band.jsx`, bottom of most pages): navy panel, no photo (removed on request; no `image` prop).
   lg+: large `text-h1` heading left, text + buttons right (equal columns), then a hairline and email / phone /
   location from `lib/site.js`. Optional `title` and `text` props.
@@ -210,7 +232,8 @@ Brand gold is only 2.5:1 on white, so **never use `gold` for text on light backg
 
 ## Open items / TODO
 - [x] Contact details: ceo@ahed.in, +91 91880 11117 (`lib/site.js`).
-- [ ] Replace placeholders: "City, Country", founder name + bio + photo (About page).
+- [ ] Replace placeholders: "City, Country"; About "Our team": names, roles and short profiles of the three
+  team members (`team` in `lib/site.js`; no photos by request).
 - [x] Logo: AHED "always ahead" recoloured to navy & gold (`src/components/layout/logo.jsx`). It's a 640×193 raster recoloured from the client's file; ask the client for a vector (SVG/AI) master for print and sharper rendering.
 - [ ] Client still to confirm whether the site represents a person or a registered firm.
 - [x] Contact form sends via Netlify Forms. On Netlify: enable form detection (Forms) and add the email

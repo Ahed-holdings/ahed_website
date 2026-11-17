@@ -129,7 +129,7 @@ export default function HomePage() {
           <h1 className="animate-fade-up text-hero-title [animation-delay:80ms]">
             <span className="block sm:whitespace-nowrap">Want to Build a Stronger Business?</span>{" "}
             <span className="block sm:whitespace-nowrap">
-              AHED Prepare you to <span className="whitespace-nowrap text-inverse-accent">Next Level.</span>
+              We Prepares you to <span className="whitespace-nowrap text-inverse-accent">Next Level.</span>
             </span>
           </h1>
           <p className="max-w-[52ch] animate-fade-up text-lead-lg text-inverse-muted [animation-delay:160ms]">
@@ -236,9 +236,10 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <Section tone="inverse">
-        <div className="container-page grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20">
-          <div data-reveal className="grid content-start gap-7">
+      {/* Compact on request: tighter padding, smaller gaps, denser principle list */}
+      <Section tone="inverse" compact>
+        <div className="container-page grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:gap-16">
+          <div data-reveal className="grid content-start gap-5">
             <Eyebrow>Why work with us?</Eyebrow>
             <h2 className="text-h2">Advice built to be applied, not simply presented.</h2>
             <p className="text-lead text-inverse-muted">
@@ -252,7 +253,7 @@ export default function HomePage() {
           </div>
           <div data-stagger className="grid gap-x-10 sm:grid-cols-2">
             {principles.map((p) => (
-              <Feature key={p.title} title={p.title}>
+              <Feature key={p.title} title={p.title} compact>
                 {p.text}
               </Feature>
             ))}
