@@ -144,6 +144,8 @@ URLs: `/about`, `/services/strategy-advisory`, … (old `*.html` URLs redirect v
   - About "Our team" (replaced the single founder block on request): `SectionHead` + three static white cards
     (gold rule, name, bronze role, short profile; no photos, no hover lift since they aren't links), three across
     from `md`, then the "areas of expertise" checklist. Data: `team` in `lib/site.js`.
+    **Hidden for now** (`SHOW_TEAM = false` at the top of `pages/about.jsx`) until the client sends real names; the
+    section then shows only the areas-of-expertise checklist. Set it to true to bring the team back.
   - Insights (`sections/insights-list.jsx`): photo cards on request, like the home service cards: the photo fills
     each card (`CardPhoto`) under a navy shade darkest at the bottom, with the gold category, white title (gold on
     hover) and "Read article" on top (`data-inverse` per card). Featured card full width, 400–460px tall; the
@@ -214,8 +216,9 @@ Brand gold is only 2.5:1 on white, so **never use `gold` for text on light backg
   floating with no bar. The logo checks what is behind it (white letters over navy `[data-inverse]`, navy-and-gold
   over light). The button is outlined in the hero (white over navy, navy over the white panel) and solid brand gold
   with navy lines (`bg-gold`, like the gold CTA) once scrolled past the first section, on any background.
-  The logo is always visible and bare (no tile, no bar): `logo.webp` (navy & gold) over light sections, white
-  letters over navy ones. The button is always visible. While the menu is open the header logo fades out and the menu panel shows its
+  The logo is bare (no tile, no bar): `logo.webp` (navy & gold) over light sections, white letters over navy ones.
+  It sits at the top of each page and scrolls away with it (translated by the scroll position, up to 120px; by
+  request it must not travel down the page over content). The button is always visible (fixed). While the menu is open the header logo fades out and the menu panel shows its
   own navy & gold logo at its top left.
 - Menu panel: white, sliding in from the right (full screen below `lg`, `clamp(380px,40vw,520px)` from `lg`), never scrolls:
   link size follows the screen height (`--sm-fixed` in the component's <style>; checked from 1920×1080 to 320×568 and

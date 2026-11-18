@@ -45,6 +45,12 @@ const cycle = [
   "Periodic review",
 ];
 
+/**
+ * "Our team" heading + cards: hidden for now (by request) until the client sends real names and profiles.
+ * Set to true to show them again; the data is `team` in lib/site.js.
+ */
+const SHOW_TEAM = false;
+
 export default function AboutPage() {
   return (
     <>
@@ -149,15 +155,19 @@ export default function AboutPage() {
         </div>
       </Section>
 
-      {/* Our team: three people as cards, name + role + short profile, no photos (data: `team` in lib/site.js) */}
+      {/* Our team: three people as cards, name + role + short profile, no photos (data: `team` in lib/site.js).
+          Hidden while SHOW_TEAM is false: the section then shows only the areas of expertise. */}
       <Section tone="muted">
         <div className="container-page">
-          <SectionHead eyebrow="Our team" title="The people behind the practice.">
-            <p>
-              A small team bringing together experience across strategy, people, operations, finance and technology.
-            </p>
-          </SectionHead>
-          <div data-stagger className="grid gap-5 md:grid-cols-3 lg:gap-6">
+          {SHOW_TEAM && (
+            <>
+              <SectionHead eyebrow="Our team" title="The people behind the practice.">
+                <p>
+                  A small team bringing together experience across strategy, people, operations, finance and
+                  technology.
+                </p>
+              </SectionHead>
+              <div data-stagger className="grid gap-5 md:grid-cols-3 lg:gap-6">
             {team.map((person, i) => (
               <article
                 key={i} // placeholder names repeat until the real ones are in
@@ -171,9 +181,14 @@ export default function AboutPage() {
                 <p className={muted}>{person.bio}</p>
               </article>
             ))}
-          </div>
-          <div data-reveal className="mt-10 grid gap-4 border-t border-border pt-8 md:mt-12">
-            <Eyebrow line={false} tone="foreground">
+              </div>
+            </>
+          )}
+          <div
+            data-reveal
+            className={SHOW_TEAM ? "mt-10 grid gap-4 border-t border-border pt-8 md:mt-12" : "grid gap-4"}
+          >
+            <Eyebrow line={!SHOW_TEAM} tone={SHOW_TEAM ? "foreground" : undefined}>
               Professional experience &amp; areas of expertise
             </Eyebrow>
             <Checklist items={expertise} />
