@@ -12,9 +12,9 @@ import { cx } from "../ui";
  * - Panel never scrolls: link size follows the screen height (see <style>); very short screens drop the footer.
  * - Header: just the logo and the menu button, no bar or background, on top of the panel. Since it floats over
  *   navy heroes, white sections and the white panel, both check what is behind them (on scroll, resize, navigation
- *   and open/close) and switch between their light-on-navy and navy-on-light versions. The logo is always shown,
- *   bare (no tile or bar): navy & gold over light sections, white letters over navy. The button: outlined over the
- *   hero, solid brand gold once scrolled past the hero.
+ *   and open/close) and switch between their light-on-navy and navy-on-light versions. The logo sits at the top of
+ *   the page and scrolls away with it (moved by the scroll position; it no longer follows the reader down the page);
+ *   the button stays fixed: outlined over the hero, solid brand gold once scrolled past the hero.
  * - While the menu is open the header logo fades out; the panel carries its own logo at its top left (`brand`
  *   rendered on light), on every screen size.
  * - Brand colours via tokens: white panel, navy text, bronze accent; gold + navy underlays (`colors`).
@@ -283,6 +283,10 @@ export function StaggeredMenu({
     let frame = 0;
     const update = () => {
       frame = 0;
+      // The logo scrolls away with the page like a normal page logo (by request: it shouldn't travel down the
+      // page over the content); only the menu button stays fixed. Moved 1:1 with the scroll until it is off screen.
+      const lift = Math.min(window.scrollY, 120);
+      if (brandRef.current) brandRef.current.style.transform = lift ? `translateY(${-lift}px)` : "";
       // Open: the button is always over the white panel; the logo too where the panel is full screen.
       // (Decided up front, because the panel is still sliding in at this point.)
       setToggleOnDark(open ? false : isDarkBehind(toggleBtnRef.current));
