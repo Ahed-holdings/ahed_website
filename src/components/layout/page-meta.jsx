@@ -1,7 +1,25 @@
 import { useEffect } from "react";
+import { useLocation } from "react-router";
 import { site } from "@/lib/site";
 
 const defaultTitle = "Ahed – Everything Ahead | Business Advisory, Transformation & Growth";
+
+/** Full <title> for a page: "Title | Site name", or the default title on the home page. */
+export const pageTitle = (title) => (title ? `${title} | ${site.name}` : defaultTitle);
+
+/** Page address without a trailing slash (except the home page "/"). */
+const cleanPath = (path) => (path.length > 1 ? path.replace(/\/+$/, "") : "/");
+
+/*
+ * Build-time pre-rendering (scripts/prerender.mjs) renders each page on the server, where effects don't run.
+ * PageMeta then records its values here during render, and the pre-renderer writes them into that page's <head>.
+ */
+let serverMeta = null;
+export function takeServerMeta() {
+  const meta = serverMeta;
+  serverMeta = null;
+  return meta;
+}
 
 /** Sets the content of a <meta> tag in <head>, creating it if it is missing. */
 function setMeta(attr, key, content) {
@@ -14,20 +32,40 @@ function setMeta(attr, key, content) {
   el.setAttribute("content", content);
 }
 
+/** Sets (or removes, when href is null) the <link rel="canonical"> in <head>. */
+function setCanonical(href) {
+  let el = document.head.querySelector('link[rel="canonical"]');
+  if (!href) return el?.remove();
+  if (!el) {
+    el = document.createElement("link");
+    el.setAttribute("rel", "canonical");
+    document.head.appendChild(el);
+  }
+  el.setAttribute("href", href);
+}
+
 /**
- * Per-page title, description and Open Graph tags. index.html holds the home page defaults
- * (what crawlers see before JavaScript runs); this updates those same tags on every route.
- * Leave `title` out on the home page to use the full default title.
+ * Per-page title, description, robots, canonical address and Open Graph tags.
+ * In the pre-rendered HTML these are written into each page's <head> at build time; in the browser they are
+ * updated on every route change. Leave `title` out on the home page to use the full default title.
  */
 export function PageMeta({ title, description = site.description, noindex = false }) {
+  const { pathname } = useLocation();
+  const fullTitle = pageTitle(title);
+
+  if (typeof document === "undefined") serverMeta = { title: fullTitle, description, noindex };
+
   useEffect(() => {
-    const fullTitle = title ? `${title} | ${site.name}` : defaultTitle;
+    // Always the main address (site.url), never the host the page happens to be opened on (netlify.app, localhost)
+    const url = noindex ? null : `${site.url}${cleanPath(pathname)}`;
     document.title = fullTitle;
     setMeta("name", "description", description);
     setMeta("property", "og:title", fullTitle);
     setMeta("property", "og:description", description);
     setMeta("name", "robots", noindex ? "noindex" : "index, follow");
-  }, [title, description, noindex]);
+    if (url) setMeta("property", "og:url", url);
+    setCanonical(url);
+  }, [fullTitle, description, noindex, pathname]);
 
   return null;
 }

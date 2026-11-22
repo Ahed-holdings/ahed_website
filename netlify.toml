@@ -1,6 +1,6 @@
 # Netlify configuration for the Ahed website.
-# Vite + React single-page app: `npm run build` writes the site to /dist. React Router handles
-# every route in the browser, so all other paths fall back to index.html (last rule below).
+# Vite + React app: `npm run build` writes the site to /dist and pre-renders every page to its own HTML file
+# (see the end of this file). React Router takes over in the browser for navigation between pages.
 
 [build]
   command = "npm run build"
@@ -111,10 +111,7 @@
   to = "/contact"
   status = 301
 
-# Single-page app: every other URL loads index.html and React Router shows the right page
-# (or its 404 page). Must stay last: Netlify applies the first matching rule, and files that
-# exist (assets, images, favicons) are served before this rule is checked.
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Pages: every page is pre-rendered at build time (scripts/prerender.mjs), which also writes dist/_redirects with
+# one rewrite per page ("/about  /_pages/about.html  200!"); Netlify applies _redirects before the rules above.
+# There is deliberately no catch-all "/* → /index.html" rule any more: unknown addresses get dist/404.html with a
+# real 404 status (better for search engines than a "soft 404"). Add new pages to src/lib/pages.js.

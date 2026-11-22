@@ -6,7 +6,8 @@ Core message on every page: *we help businesses make the transition from ambitio
 ## Stack
 - **Vite 8 + React 19**, plain JavaScript: components are `.jsx`, other modules `.js` (no TypeScript).
   Migrated from Next.js 16 in Nov 2026; the site is now a single-page app.
-- **React Router 8** (`react-router`): all routes in `src/app.jsx` (`createBrowserRouter`), shared shell in
+- **React Router 8** (`react-router`): all routes in `src/routes.jsx` (used by `src/app.jsx` → `createBrowserRouter`, and by
+  the build-time renderer `src/entry-server.jsx`), shared shell in
   `src/components/layout/root-layout.jsx` (`<Outlet/>` + `<ScrollRestoration/>`). Use `<Link to>` from `react-router`;
   `ButtonLink` / `LinkArrow` in `ui.jsx` keep an `href` prop and pass it on as `to`.
 - **Tailwind CSS v4** via `@tailwindcss/vite`, configured in `src/index.css` (`@import "tailwindcss"` + `@theme`). No `tailwind.config.js`.
@@ -15,18 +16,26 @@ Core message on every page: *we help businesses make the transition from ambitio
 - Page titles/descriptions: render `<PageMeta title description />` at the top of each page (`src/components/layout/page-meta.jsx`).
   It updates the tags in `index.html`, which hold the home-page defaults crawlers see before JavaScript runs.
 - `npm run dev` → http://localhost:3000 · `npm run build` → `dist/` · `npm run preview` serves `dist/` on :4173
-  with the same security headers as Netlify (read from `netlify.toml` in `vite.config.js`): test CSP changes there.
-- `npm run build` also writes `robots.txt` and `sitemap.xml` (`seoFiles` in `vite.config.js`, page list there: add new
-  pages to it). Address = Netlify's `URL` env (the custom domain once connected), else `site.url` in `lib/site.js`.
+  like Netlify: same security headers (read from `netlify.toml`), the `_redirects` page rewrites and real 404s
+  (`netlifyRewrites` in `vite.config.js`). Test CSP and pre-rendering changes there.
+- **Pre-rendering** (for search engines): `npm run build` = `vite build` → `vite build --ssr src/entry-server.jsx`
+  (into `dist-ssr/`) → `node scripts/prerender.mjs`, which renders every page in `src/lib/pages.js` to static HTML with
+  its own `<title>`, description, robots, canonical + `og:url` (always `site.url`), and the full page text:
+  `dist/index.html` (home, plus schema.org Organization JSON-LD), `dist/_pages/<path>.html`, `dist/404.html`, and
+  `dist/_redirects` with one rewrite per page (`/about  /_pages/about.html  200!`). There is **no SPA catch-all** any
+  more: unknown addresses get `404.html` with a real 404. In the browser `main.jsx` still uses `createRoot`, which
+  replaces the pre-rendered markup with the live app. Components must not touch `window`/`document` during render
+  (only in effects), or the build fails. `PageMeta` records its values during the server render (`takeServerMeta`).
+  Scroll-reveal hiding only applies under `html[data-js]` (set in `main.jsx`), so pre-rendered text is visible without JS.
+- `npm run build` also writes `robots.txt` (also disallows `/_pages/`) and `sitemap.xml` (`seoFiles` in `vite.config.js`,
+  from the same page list). Address = Netlify's `URL` env (the custom domain once connected), else `site.url` in `lib/site.js`.
 - Caching (`netlify.toml`): `/assets/*` 1 year immutable (hashed names); `/img/*` 1 day then revalidate (give a
   replaced photo a new file name to show it at once); HTML/robots/sitemap always revalidated (Netlify default).
 - `@/` is an alias for `src/` (`vite.config.js`, `jsconfig.json` for editors).
 - Deploy: **Netlify**, configured in `netlify.toml` (build `npm run build`, publish `dist`, Node 22, headers incl. a strict
   Content-Security-Policy (any new outside script/font/API must be added there first), old-URL redirects,
   `NETLIFY_NEXT_PLUGIN_SKIP=true` because the Netlify project was first set up for Next.js and still adds its Next.js plugin,
-  and a last `/* → /index.html 200` rule so every route works on reload; keep that rule last).
-- SEO trade-off of the SPA: pages are rendered in the browser. Google renders JavaScript, but social-card scrapers
-  only see the home-page tags in `index.html`. Add prerendering if per-page link previews matter.
+  no SPA catch-all: page rewrites come from the generated `dist/_redirects`).
 - Git: `.gitignore` excludes `node_modules/`, `dist/`, `.playwright-mcp/`, `.env*`, logs, Office lock files (`~$*`)
   and the whole `.claude/` folder (local only, not tracked).
 
@@ -35,7 +44,9 @@ Core message on every page: *we help businesses make the transition from ambitio
 index.html                      Vite entry: default <title>/meta/Open Graph, favicons, #root
 src/
   main.jsx                      Mounts <App/>, imports the font and index.css
-  app.jsx                       Router: every route → page component
+  routes.jsx                    Every route → page component (shared by app.jsx and entry-server.jsx)
+  app.jsx                       Browser router (createBrowserRouter(routes))
+  entry-server.jsx              Build-time render of one page to HTML (for scripts/prerender.mjs)
   index.css                     Design tokens (OKLCH, :root) + Tailwind @theme + custom variants/utilities
   pages/                        One file per route: home, about, services, service-detail (6 services,
                                 one template, data from lib/site.js, unknown slug → 404), how-we-work,
@@ -48,7 +59,10 @@ src/
     layout/                     On every page: root-layout, site-header, staggered-menu, site-footer, logo, scroll-reveal, page-meta
     sections/                   Page sections: page-hero, cta-band, service-card, card-swap, challenge-stack, scroll-stack, service-stack, flowing-menu, engagement-menu,
                                 insights-list, contact-form
-  lib/site.js                   Site name, default description, nav, contact placeholders, all service content
+  lib/site.js                   Site name, address (url), default description, nav, contact details, all service content
+  lib/pages.js                  Every public page path (sitemap + pre-rendering)
+  lib/email-check.js            Contact form email typo suggestion + domain check
+scripts/prerender.mjs           Writes the pre-rendered pages, 404.html and _redirects after the build
 public/
   img/                          Photos (WebP, quality 80) + logo.webp (navy & gold) / logo-inverse.webp (white letters, for dark)
   favicon.ico, icon.png, apple-icon.png   The logo's "A" + gold swoosh on a navy tile
@@ -60,11 +74,12 @@ docs/
 netlify.toml                    Netlify build, headers, redirects, SPA fallback
 .claude/launch.json             Preview servers: dev (:3000) and the built `dist/` folder (:4173)
 ```
-Generated, safe to delete any time: `dist/` (build output), `.playwright-mcp/`.
+Generated, safe to delete any time: `dist/`, `dist-ssr/` (build output), `.playwright-mcp/`.
 Header, footer and CTA band are shared components — change them once. Service content lives in `src/lib/site.js`.
 New components: page-wide chrome goes in `src/components/layout/`, page sections in `src/components/sections/`,
 small reusable primitives in `src/components/ui.jsx`. Import with `@/components/<folder>/<name>`.
-New page: add a file in `src/pages/` (with `<PageMeta>`), a route in `src/app.jsx`, and nav entries in `src/lib/site.js`.
+New page: add a file in `src/pages/` (with `<PageMeta>`), a route in `src/routes.jsx`, its path in `src/lib/pages.js`
+(or it gets no HTML file and returns 404 on Netlify), and nav entries in `src/lib/site.js`.
 URLs: `/about`, `/services/strategy-advisory`, … (old `*.html` URLs redirect via `netlify.toml`; `/about/` also works).
 
 ## Styling conventions

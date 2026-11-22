@@ -3,7 +3,8 @@ import CardSwap, { Card } from "./card-swap";
 
 /** True while the media query matches (updates on resize/rotate). */
 function useMediaQuery(query) {
-  const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
+  // false while pre-rendering at build time (no window); the effect below sets the real value in the browser
+  const [matches, setMatches] = useState(() => typeof window !== "undefined" && window.matchMedia(query).matches);
   useEffect(() => {
     const mq = window.matchMedia(query);
     const onChange = () => setMatches(mq.matches);

@@ -3,19 +3,8 @@ import { fileURLToPath, URL } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import { services, site } from "./src/lib/site.js";
-
-/** Every public page (keep in sync with src/app.jsx when pages are added). */
-const pages = [
-  "/",
-  "/about",
-  "/services",
-  ...services.map((s) => `/services/${s.slug}`),
-  "/how-we-work",
-  "/industries",
-  "/insights",
-  "/contact",
-];
+import { pages } from "./src/lib/pages.js";
+import { site } from "./src/lib/site.js";
 
 /**
  * Writes sitemap.xml and robots.txt into the build. The address comes from Netlify's URL variable (the project's
@@ -36,7 +25,7 @@ function seoFiles() {
       this.emitFile({
         type: "asset",
         fileName: "robots.txt",
-        source: `User-agent: *\nAllow: /\nDisallow: /__forms.html\n\nSitemap: ${origin}/sitemap.xml\n`,
+        source: `User-agent: *\nAllow: /\nDisallow: /__forms.html\nDisallow: /_pages/\n\nSitemap: ${origin}/sitemap.xml\n`,
       });
     },
   };
@@ -54,8 +43,46 @@ function netlifyHeaders() {
   return Object.fromEntries(pairs.filter(([key]) => key !== "for"));
 }
 
+/**
+ * `npm run preview` serves the build the way Netlify does: each page through the rewrites in dist/_redirects
+ * (written by scripts/prerender.mjs), and any other extensionless address as dist/404.html with status 404.
+ */
+function netlifyRewrites() {
+  const dist = new URL("./dist/", import.meta.url);
+  return {
+    name: "ahed-preview-netlify-rewrites",
+    configurePreviewServer(server) {
+      server.middlewares.use((req, res, next) => {
+        let rules = [];
+        try {
+          rules = readFileSync(new URL("_redirects", dist), "utf8")
+            .split("\n")
+            .filter((line) => line.trim() && !line.startsWith("#"))
+            .map((line) => line.trim().split(/\s+/));
+        } catch {
+          return next(); // no pre-rendered build: plain preview
+        }
+        const [path, query = ""] = req.url.split("?");
+        const clean = path.length > 1 ? path.replace(/\/+$/, "") : path;
+        const rule = rules.find(([from]) => from === clean);
+        if (rule) {
+          req.url = rule[1] + (query ? `?${query}` : "");
+          return next();
+        }
+        if (clean !== "/" && !/\.[a-z0-9]+$/i.test(clean)) {
+          res.statusCode = 404;
+          for (const [key, value] of Object.entries(netlifyHeaders())) res.setHeader(key, value);
+          res.setHeader("Content-Type", "text/html; charset=utf-8");
+          return res.end(readFileSync(new URL("404.html", dist)));
+        }
+        next();
+      });
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), tailwindcss(), seoFiles()],
+  plugins: [react(), tailwindcss(), seoFiles(), netlifyRewrites()],
   resolve: {
     // `@/components/ui` → src/components/ui.jsx
     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
