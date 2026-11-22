@@ -195,8 +195,8 @@
   /* Scroll reveal: <ScrollReveal /> sets data-visible when the element enters
      the viewport. Uses an animation (fill: backwards) rather than a transition
      so it never overrides a card's own hover transition. */
-  [data-reveal]:not([data-visible]),
-  [data-stagger] > :not([data-visible]) { opacity: 0; }
+  html[data-js] [data-reveal]:not([data-visible]),
+  html[data-js] [data-stagger] > :not([data-visible]) { opacity: 0; }
   [data-reveal][data-visible],
   [data-stagger] > [data-visible] {
     animation: reveal-up 700ms var(--ease-out-expo) var(--d, 0ms) backwards;
