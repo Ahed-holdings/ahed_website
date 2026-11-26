@@ -2,10 +2,10 @@ import { useEffect } from "react";
 import { useLocation } from "react-router";
 import { site } from "@/lib/site";
 
-const defaultTitle = "Ahed – Everything Ahead | Business Advisory, Transformation & Growth";
+const defaultTitle = `${site.brand} | Business Advisory, Transformation & Growth`;
 
-/** Full <title> for a page: "Title | Site name", or the default title on the home page. */
-export const pageTitle = (title) => (title ? `${title} | ${site.name}` : defaultTitle);
+/** Full <title> for a page: "Title | Ahed – Always Ahead", or the default title on the home page. */
+export const pageTitle = (title) => (title ? `${title} | ${site.brand}` : defaultTitle);
 
 /** Page address without a trailing slash (except the home page "/"). */
 const cleanPath = (path) => (path.length > 1 ? path.replace(/\/+$/, "") : "/");

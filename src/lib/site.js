@@ -1,7 +1,12 @@
 import { Briefcase, ChartColumn, ClipboardList, Repeat, Shield, Users } from "lucide-react";
 
 export const site = {
-  name: "Ahed – Everything Ahead",
+  /** Company name (copyright, business details for search engines). */
+  name: "Ahed",
+  /** The line under the name in the logo. */
+  slogan: "Always ahead",
+  /** Name + line as shown in page titles and link previews: "About Us | Ahed – Always Ahead". */
+  brand: "Ahed – Always Ahead",
   /**
    * Site address, used for sitemap.xml and robots.txt (vite.config.js). On Netlify builds the project's main address
    * (env URL, the custom domain once connected) takes over, so this is only the fallback for local builds.

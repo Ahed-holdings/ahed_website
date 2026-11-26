@@ -1,6 +1,8 @@
-# Ahed – Everything Ahead · Website
+# Ahed – Always Ahead · Website
 
-Marketing website for **Ahed – Everything Ahead**, a business advisory firm (freelance project by Nihadh Muhammed).
+Marketing website for **Ahed**, a business advisory firm (freelance project by Nihadh Muhammed). The company name
+is **Ahed**; **"Always ahead"** is the line under it in the logo. Titles and link previews show "Ahed – Always Ahead"
+(`site.name` / `site.slogan` / `site.brand` in `lib/site.js`). Not "Everything Ahead" (old wording, replaced on request).
 Core message on every page: *we help businesses make the transition from ambition to structured, sustainable performance.*
 
 ## Stack
