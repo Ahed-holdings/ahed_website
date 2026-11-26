@@ -16,8 +16,9 @@ export const site = {
   phoneHref: "tel:+919188011117",
   /** WhatsApp number, digits only with country code (wa.me links). Contact-form leads that prefer WhatsApp go here. */
   whatsapp: "919188011117",
-  // TODO: replace once the client confirms it.
-  location: "City, Country",
+  /** Cities the firm works from / serves (footer, contact band, contact page, and areaServed for search engines). */
+  locations: ["Kochi", "Kottayam", "Ahmedabad"],
+  location: "Kochi · Kottayam · Ahmedabad",
 };
 
 export const mainNav = [

@@ -74,7 +74,7 @@ export default function ContactPage() {
                 <div className="grid gap-0.5">
                   <span className="text-sm text-inverse-muted">Location / service geography</span>
                   <span className="font-semibold">{site.location}</span>
-                  <span className="text-sm text-inverse-muted">Serving clients across the region</span>
+                  <span className="text-sm text-inverse-muted">Serving clients across India</span>
                 </div>
               </li>
             </ul>
