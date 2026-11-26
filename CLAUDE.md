@@ -250,8 +250,10 @@ Brand gold is only 2.5:1 on white, so **never use `gold` for text on light backg
 
 ## Open items / TODO
 - [x] Contact details: ceo@ahed.in, +91 91880 11117 (`lib/site.js`).
-- [ ] Replace placeholders: "City, Country"; About "Our team": names, roles and short profiles of the three
-  team members (`team` in `lib/site.js`; no photos by request).
+- [x] Location: Kochi · Kottayam · Ahmedabad (`site.locations` / `site.location`; footer, CTA band, contact page,
+  and `areaServed` in the home page's Organization JSON-LD).
+- [ ] About "Our team": names, roles and short profiles of the three team members (`team` in `lib/site.js`; no
+  photos by request; shown again with `SHOW_TEAM = true`).
 - [x] Logo: AHED "always ahead" recoloured to navy & gold (`src/components/layout/logo.jsx`). It's a 640×193 raster recoloured from the client's file; ask the client for a vector (SVG/AI) master for print and sharper rendering.
 - [ ] Client still to confirm whether the site represents a person or a registered firm.
 - [x] Contact form sends via Netlify Forms. On Netlify: enable form detection (Forms) and add the email

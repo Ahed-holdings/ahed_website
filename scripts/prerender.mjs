@@ -56,6 +56,7 @@ const organization = {
   email: site.email,
   telephone: site.phone.replace(/\s+/g, ""),
   description: site.description,
+  areaServed: site.locations.map((name) => ({ "@type": "City", name })),
 };
 
 async function page(path) {
