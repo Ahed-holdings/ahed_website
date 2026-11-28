@@ -17,7 +17,7 @@ export function ServiceCard({ service }) {
       <div className="relative aspect-[384/232] overflow-hidden bg-muted inverse:bg-inverse">
         <Image
           src={service.image}
-          alt=""
+          alt={service.imageAlt ?? ""}
           fill
           className="object-cover transition-transform duration-900 ease-out-expo group-hover:scale-107"
         />

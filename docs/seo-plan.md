@@ -30,6 +30,10 @@ Email **ceo@ahed.in** · Areas **Kochi, Kottayam, Ahmedabad**
 
 ---
 
+> **Rule:** the website's **visible text** comes from the client and is not changed without approval. Content ideas
+> (FAQs, overviews, city pages, articles) are proposed first and added only once approved.
+> **Meta titles, meta descriptions, alt text and structured data** are SEO and can be optimised directly.
+
 ## Phase 0 · Foundations (done)
 
 Why: Google must be able to find, read and trust the site before anything else counts.
@@ -51,11 +55,13 @@ Why: Google must be able to find, read and trust the site before anything else c
 Why: Google ranks a page for "business consultant Kochi" when the page clearly talks about that service **in that
 place**. Right now the site barely mentions the cities in its titles and text.
 
-**1a. Titles and descriptions with locations**
-- [x] Home title: "Ahed – Always Ahead | Business Advisory & Growth" (decision: no city names in titles; cities go in
-      descriptions, city pages and the business details instead)
-- [x] Fuller descriptions (120–160 characters) on every main page, mentioning the cities where natural
-- [x] Richer business details for Google: "ProfessionalService" with services and areas served
+**1a. Titles, descriptions and business details**
+- [x] Meta titles and descriptions optimised (titles ≤ 60, descriptions 120–160, no city names in titles; cities in
+      descriptions)
+- [x] Richer business details for Google: "ProfessionalService" with services and areas served (hidden data)
+- [x] Breadcrumb trail for every page and Service details on the service pages (hidden data)
+- [x] Photo descriptions (alt text) for the six service photos (hidden)
+- [x] Expertise keywords (knowsAbout) in the business details (hidden)
 
 **1b. One page per city** (strongest on-site step for local search)
 - [ ] /business-consultant-kochi

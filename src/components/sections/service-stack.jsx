@@ -106,7 +106,7 @@ export function ServiceStack({ services, stackPosition = "16%", cardStyle }) {
           <Link to={serviceHref(s.slug)} className="group relative isolate block h-full overflow-hidden">
             <Image
               src={s.image}
-              alt=""
+              alt={s.imageAlt ?? ""}
               fill
               className="-z-20 object-cover transition-transform duration-900 ease-out-expo group-hover:scale-105"
             />

@@ -5,13 +5,23 @@ is **Ahed**; **"Always ahead"** is the line under it in the logo. Titles and lin
 (`site.name` / `site.slogan` / `site.brand` in `lib/site.js`). Not "Everything Ahead" (old wording, replaced on request).
 Core message on every page: *we help businesses make the transition from ambition to structured, sustainable performance.*
 
+## Content rule (important)
+**Visible site text belongs to the client.** Never change, add or rewrite anything visitors see on the pages
+(headings, paragraphs, lists, FAQs, labels, hero lines, buttons) unless the user explicitly asks for that exact change.
+If an SEO step needs visible text, propose the wording in chat and change it only after the user approves.
+**SEO parts are free to optimise:** meta titles and meta descriptions (only shown in search results), image alt
+text, structured data (JSON-LD), sitemap/robots, canonical, links, speed.
+
 ## SEO
-Plan and progress: **`docs/seo-plan.md`** (phases, checklists, who does what; written for a beginner). Rules:
-titles ≤ 60 characters, descriptions 120–160. **No city names in titles** (client's choice): the cities (Kochi,
-Kottayam, Ahmedabad) go in descriptions where natural, the city pages and the JSON-LD. Home title is
-"Ahed – Always Ahead | Business Advisory & Growth" (`defaultTitle` in `page-meta.jsx`, also in `index.html`);
-other pages "Page | Ahed – Always Ahead". The home page's JSON-LD (scripts/prerender.mjs) is an Organization +
-ProfessionalService with `areaServed` cities and `makesOffer` services; add social profile URLs to `sameAs` when they exist.
+Plan and progress: **`docs/seo-plan.md`** (phases, checklists, who does what; written for a beginner).
+Meta: titles ≤ 60 characters, descriptions 120–160; no city names in titles (user's choice), cities in descriptions
+where natural. Home title "Ahed – Always Ahead | Business Advisory & Growth" (`defaultTitle` in `page-meta.jsx`, also
+in `index.html`); other pages "Page | Ahed – Always Ahead" (titles/descriptions in each page's `metadata`; home
+description = `site.description`). Hidden data (scripts/prerender.mjs): home JSON-LD = Organization +
+ProfessionalService with `areaServed` cities, `knowsAbout` (13 expertise topics) and `makesOffer` services; every
+other indexable page a BreadcrumbList; service pages a Service. Each service photo has `imageAlt` in `lib/site.js`
+(describes the actual photo + search words), used by the home cards, the Services grid and the service page hero.
+Decorative duplicates (outcome photo, Insights cards) keep alt="". Add social profile URLs to `sameAs` when they exist.
 
 ## Stack
 - **Vite 8 + React 19**, plain JavaScript: components are `.jsx`, other modules `.js` (no TypeScript).

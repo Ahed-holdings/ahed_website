@@ -7,7 +7,7 @@ import { cx, delay, Eyebrow } from "../ui";
  * the photo's height is capped by the screen). Without an image it keeps a natural height.
  * No breadcrumb trail (removed on request): eyebrow, heading and intro only.
  */
-export function PageHero({ eyebrow, title, lead, image }) {
+export function PageHero({ eyebrow, title, lead, image, imageAlt = "" }) {
   return (
     <section
       data-inverse
@@ -35,7 +35,7 @@ export function PageHero({ eyebrow, title, lead, image }) {
           >
             <Image
               src={image}
-              alt=""
+              alt={imageAlt}
               fill
               priority
               className="object-cover"

@@ -70,6 +70,8 @@ export const services = [
     slug: "strategy-advisory",
     title: "Strategy Advisory",
     image: "/img/strategy.webp",
+    /** Photo description for search engines and screen readers (alt text; not shown on the page). */
+    imageAlt: "Leadership team in a business strategy meeting with market trend dashboards",
     tags: "Business strategy · Growth planning · Market expansion · Operating models",
     summary:
       "Define the direction, identify growth opportunities and translate business ambitions into clear priorities and executable plans.",
@@ -97,6 +99,8 @@ export const services = [
     slug: "performance-improvement",
     title: "Performance Improvement",
     image: "/img/performance.webp",
+    /** Photo description for search engines and screen readers (alt text; not shown on the page). */
+    imageAlt: "Team reviewing business performance KPIs on a dashboard",
     tags: "Process redesign · Cost optimisation · Productivity · Performance management",
     summary:
       "Improve the way the business operates by addressing inefficiencies, strengthening processes and making performance more measurable.",
@@ -119,6 +123,8 @@ export const services = [
     slug: "people-and-change",
     title: "People & Change",
     image: "/img/people.webp",
+    /** Photo description for search engines and screen readers (alt text; not shown on the page). */
+    imageAlt: "Learning and development workshop on organisation and process planning",
     tags: "Organisation design · HR strategy · Leadership · Change management",
     summary:
       "Align organisational structure, leadership, talent and workplace practices with the needs of the business.",
@@ -143,6 +149,8 @@ export const services = [
     slug: "digital-and-innovation",
     title: "Digital & Innovation",
     image: "/img/digital.webp",
+    /** Photo description for search engines and screen readers (alt text; not shown on the page). */
+    imageAlt: "Team discussing digital transformation and ERP dashboards",
     tags: "Digital strategy · ERP/CRM advisory · Automation · Innovation",
     summary:
       "Identify where technology, automation and new ways of working can solve business problems and unlock new opportunities.",
@@ -166,6 +174,8 @@ export const services = [
     slug: "finance-and-accounting",
     title: "Finance & Accounting",
     image: "/img/finance.webp",
+    /** Photo description for search engines and screen readers (alt text; not shown on the page). */
+    imageAlt: "Finance professional reviewing a balance sheet and profit and loss statement",
     tags: "Financial planning · Management reporting · Cost control · Accounting processes",
     summary:
       "Strengthen financial discipline, reporting and management information to support informed decisions and business control.",
@@ -194,6 +204,8 @@ export const services = [
     slug: "managed-services",
     title: "Managed Services",
     image: "/img/managed.webp",
+    /** Photo description for search engines and screen readers (alt text; not shown on the page). */
+    imageAlt: "Business support team managing reporting and operations at their desks",
     tags: "Finance operations · HR administration · MIS support · Process coordination",
     summary:
       "Help businesses organise and operate selected support functions through defined processes, appropriate expertise and clear service standards.",
