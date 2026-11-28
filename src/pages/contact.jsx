@@ -6,8 +6,9 @@ import { delay, Eyebrow } from "@/components/ui";
 import { site } from "@/lib/site";
 
 const metadata = {
-  title: "Contact",
-  description: "Tell us where your business needs to go. Request an initial discussion.",
+  title: "Contact Us",
+  description:
+    "Contact Ahed in Kochi, Kottayam or Ahmedabad. Request an initial discussion by form, email, phone or WhatsApp and we will come back to you promptly.",
 };
 
 /** First three steps of the engagement cycle (same wording as How We Work) */

@@ -18,4 +18,4 @@ export async function render(path) {
 
 // Re-exported so the pre-render script reads the page list and site details through the same bundle
 export { pages } from "@/lib/pages";
-export { site } from "@/lib/site";
+export { services, site } from "@/lib/site";

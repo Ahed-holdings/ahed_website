@@ -6,7 +6,8 @@ import { Section } from "@/components/ui";
 
 const metadata = {
   title: "Insights & Resources",
-  description: "Practical articles, leadership perspectives, business improvement guides and case studies.",
+  description:
+    "Practical articles, leadership perspectives and business improvement guides on management systems, performance, finance and technology for growing businesses.",
 };
 
 export default function InsightsPage() {

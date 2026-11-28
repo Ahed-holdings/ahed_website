@@ -15,7 +15,7 @@ export const site = {
   tagline: "Helping businesses make the transition from ambition to structured, sustainable performance.",
   /** Default meta description (home page and any page without its own) */
   description:
-    "We work with business leaders to sharpen strategy, strengthen performance and develop the people, processes and systems needed for sustainable growth.",
+    "Ahed helps business owners in Kochi, Kottayam and Ahmedabad sharpen strategy, strengthen performance and build the people, processes and systems for growth.",
   email: "ceo@ahed.in",
   phone: "+91 91880 11117",
   phoneHref: "tel:+919188011117",
