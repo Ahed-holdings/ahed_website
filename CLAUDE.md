@@ -43,10 +43,20 @@ Decorative duplicates (outcome photo, Insights cards) keep alt="". Add social pr
   its own `<title>`, description, robots, canonical + `og:url` (always `site.url`), and the full page text:
   `dist/index.html` (home, plus schema.org Organization JSON-LD), `dist/_pages/<path>.html`, `dist/404.html`, and
   `dist/_redirects` with one rewrite per page (`/about  /_pages/about.html  200!`). There is **no SPA catch-all** any
-  more: unknown addresses get `404.html` with a real 404. In the browser `main.jsx` still uses `createRoot`, which
-  replaces the pre-rendered markup with the live app. Components must not touch `window`/`document` during render
+  more: unknown addresses get `404.html` with a real 404. In the browser `main.jsx` hydrates the pre-rendered markup
+  (see Performance below). Components must not touch `window`/`document` during render
   (only in effects), or the build fails. `PageMeta` records its values during the server render (`takeServerMeta`).
   Scroll-reveal hiding only applies under `html[data-js]` (set in `main.jsx`), so pre-rendered text is visible without JS.
+- **Performance** (PageSpeed, Nov 2026; no content/design change): `main.jsx` **hydrates** the pre-rendered HTML
+  (`hydrateRoot`) instead of redrawing it (createRoot only when #root is empty, i.e. `npm run dev`), after the router has
+  loaded the current page's code. Pages are **lazy routes** (`src/routes.jsx`, one JS chunk each). Because of hydration,
+  **the first render in the browser must match the build-time render**: never read `window`/`matchMedia` in render or
+  in a `useState` initializer; start from the server value and correct it in a (layout) effect (see `useMediaQuery` in
+  `challenge-stack.jsx`; reading it during render left desktop-size cards on phones). `prerender.mjs` adds per page a
+  font preload (Manrope latin) and `modulepreload` links for that page's chunks (from `dist/.vite/manifest.json`,
+  `build.manifest` in vite.config.js). The site menu's panel and underlays stay `visibility:hidden` until GSAP has moved
+  them off-screen (`.sm-scope[data-ready]`); without that, the pre-rendered open menu flashed over the page on load.
+  `Grainient` starts WebGL only after `load` + idle.
 - `npm run build` also writes `robots.txt` (also disallows `/_pages/`) and `sitemap.xml` (`seoFiles` in `vite.config.js`,
   from the same page list). Address = Netlify's `URL` env (the custom domain once connected), else `site.url` in `lib/site.js`.
 - Caching (`netlify.toml`): `/assets/*` 1 year immutable (hashed names); `/img/*` 1 day then revalidate (give a
