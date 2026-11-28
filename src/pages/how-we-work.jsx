@@ -8,7 +8,7 @@ import { MethodSteps, Section, SectionHead, Timeline } from "@/components/ui";
 const metadata = {
   title: "How We Work",
   description:
-    "Engagement models and the engagement cycle — scope, duration, deliverables and fees agreed for each assignment.",
+    "Flexible engagement models, from a one-off business diagnostic to retained advisory and managed support, with scope, duration and fees agreed upfront.",
 };
 
 const models = [

@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import { useLocation } from "react-router";
 import { site } from "@/lib/site";
 
-const defaultTitle = "Ahed – Everything Ahead | Business Advisory, Transformation & Growth";
+// Home page title: brand first, then what Ahed does. No city names in titles (by request): the cities go in the
+// descriptions, the city pages and the JSON-LD instead. Keep it under ~60 characters.
+const defaultTitle = `${site.brand} | Business Advisory & Growth`;
 
-/** Full <title> for a page: "Title | Site name", or the default title on the home page. */
-export const pageTitle = (title) => (title ? `${title} | ${site.name}` : defaultTitle);
+/** Full <title> for a page: "Title | Ahed – Always Ahead", or the default title on the home page. */
+export const pageTitle = (title) => (title ? `${title} | ${site.brand}` : defaultTitle);
 
 /** Page address without a trailing slash (except the home page "/"). */
 const cleanPath = (path) => (path.length > 1 ? path.replace(/\/+$/, "") : "/");

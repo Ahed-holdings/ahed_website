@@ -6,7 +6,8 @@ import { ButtonLink, Checklist, Eyebrow, IconCard, muted, Section, SectionHead }
 
 const metadata = {
   title: "Industries & Business Challenges",
-  description: "The types of businesses and business situations we support.",
+  description:
+    "Advisory for manufacturing, FMCG, retail, technology, hospitality and family-owned businesses in Kerala and Gujarat, from growing SMEs to new ventures.",
 };
 
 const sectors = [

@@ -1,7 +1,17 @@
-# Ahed – Everything Ahead · Website
+# Ahed – Always Ahead · Website
 
-Marketing website for **Ahed – Everything Ahead**, a business advisory firm (freelance project by Nihadh Muhammed).
+Marketing website for **Ahed**, a business advisory firm (freelance project by Nihadh Muhammed). The company name
+is **Ahed**; **"Always ahead"** is the line under it in the logo. Titles and link previews show "Ahed – Always Ahead"
+(`site.name` / `site.slogan` / `site.brand` in `lib/site.js`). Not "Everything Ahead" (old wording, replaced on request).
 Core message on every page: *we help businesses make the transition from ambition to structured, sustainable performance.*
+
+## SEO
+Plan and progress: **`docs/seo-plan.md`** (phases, checklists, who does what; written for a beginner). Rules:
+titles ≤ 60 characters, descriptions 120–160. **No city names in titles** (client's choice): the cities (Kochi,
+Kottayam, Ahmedabad) go in descriptions where natural, the city pages and the JSON-LD. Home title is
+"Ahed – Always Ahead | Business Advisory & Growth" (`defaultTitle` in `page-meta.jsx`, also in `index.html`);
+other pages "Page | Ahed – Always Ahead". The home page's JSON-LD (scripts/prerender.mjs) is an Organization +
+ProfessionalService with `areaServed` cities and `makesOffer` services; add social profile URLs to `sameAs` when they exist.
 
 ## Stack
 - **Vite 8 + React 19**, plain JavaScript: components are `.jsx`, other modules `.js` (no TypeScript).

@@ -6,9 +6,9 @@ import { ButtonLink, cardClass, Eyebrow, muted, Section, SectionHead } from "@/c
 import { services } from "@/lib/site";
 
 const metadata = {
-  title: "Services",
+  title: "Business Advisory Services",
   description:
-    "Strategy, performance, people, digital, finance and managed services — connected capabilities for one business objective.",
+    "Strategy, performance, people, digital, finance and managed services for growing businesses in Kochi, Kottayam and Ahmedabad, connected around one objective.",
 };
 
 const objective = [

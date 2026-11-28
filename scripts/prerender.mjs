@@ -27,7 +27,7 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 const dist = `${root}dist/`;
 const ssrEntry = `${root}dist-ssr/entry-server.js`;
 
-const { render, pages, site } = await import(pathToFileURL(ssrEntry).href);
+const { render, pages, services, site } = await import(pathToFileURL(ssrEntry).href);
 
 const origin = (process.env.URL || site.url).replace(/\/$/, "");
 const template = readFileSync(`${dist}index.html`, "utf8");
@@ -46,17 +46,27 @@ const setMetaContent = (html, attr, key, value) => {
   return html.replace(tag, `$1${escapeAttr(value)}$2`);
 };
 
-/** Business details for search engines (schema.org Organization), on the home page. */
+/**
+ * Business details for search engines (schema.org), on the home page: an Organization that is also a
+ * ProfessionalService, with the cities it serves and the services it offers (each linking to its page).
+ * Add the LinkedIn / social profile URLs to `sameAs` once they exist (they help Google connect the profiles).
+ */
 const organization = {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": ["Organization", "ProfessionalService"],
   name: site.name,
+  alternateName: site.brand,
+  slogan: site.slogan,
   url: `${origin}/`,
   logo: `${origin}/icon.png`,
   email: site.email,
   telephone: site.phone.replace(/\s+/g, ""),
   description: site.description,
   areaServed: site.locations.map((name) => ({ "@type": "City", name })),
+  makesOffer: services.map((s) => ({
+    "@type": "Offer",
+    itemOffered: { "@type": "Service", name: s.title, description: s.summary, url: `${origin}/services/${s.slug}` },
+  })),
 };
 
 async function page(path) {

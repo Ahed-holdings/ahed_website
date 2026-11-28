@@ -17,7 +17,8 @@ import { team } from "@/lib/site";
 
 const metadata = {
   title: "About Us",
-  description: "Helping businesses build strong foundations for growth through practical, business-focused advisory.",
+  description:
+    "Ahed helps business owners and leadership teams in Kochi, Kottayam and Ahmedabad build strong foundations for growth through practical advisory.",
 };
 
 const values = [
