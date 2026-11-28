@@ -63,6 +63,22 @@ const organization = {
   telephone: site.phone.replace(/\s+/g, ""),
   description: site.description,
   areaServed: site.locations.map((name) => ({ "@type": "City", name })),
+  // Expertise topics (hidden keywords for search engines), all taken from the services the site lists
+  knowsAbout: [
+    "Business strategy",
+    "Business planning",
+    "Business process improvement",
+    "SOP development",
+    "KPI and MIS reporting",
+    "Organisation design",
+    "HR consulting",
+    "Change management",
+    "Digital transformation",
+    "ERP advisory",
+    "Financial planning and budgeting",
+    "Management reporting",
+    "Managed business services",
+  ],
   makesOffer: services.map((s) => ({
     "@type": "Offer",
     itemOffered: { "@type": "Service", name: s.title, description: s.summary, url: `${origin}/services/${s.slug}` },
@@ -88,8 +104,36 @@ async function page(path) {
     head.push(`<link rel="canonical" href="${escapeAttr(url)}" />`);
     head.push(`<meta property="og:url" content="${escapeAttr(url)}" />`);
   }
-  if (path === "/") {
-    head.push(`<script type="application/ld+json">${JSON.stringify(organization).replace(/</g, "\\u003c")}</script>`);
+  const jsonLd = (data) => `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`;
+  if (path === "/") head.push(jsonLd(organization));
+  if (path !== "/" && !meta.noindex) {
+    // Breadcrumb trail for search results ("ahed.in › Services › Strategy Advisory")
+    const service = services.find((s) => path === `/services/${s.slug}`);
+    const trail = [{ name: "Home", url: `${origin}/` }];
+    if (service) trail.push({ name: "Services", url: `${origin}/services` });
+    trail.push({ name: meta.title.split(" | ")[0], url });
+    head.push(
+      jsonLd({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: trail.map((item, i) => ({ "@type": "ListItem", position: i + 1, name: item.name, item: item.url })),
+      }),
+    );
+    // Service pages: what the service is, who provides it and where
+    if (service) {
+      head.push(
+        jsonLd({
+          "@context": "https://schema.org",
+          "@type": "Service",
+          name: service.title,
+          serviceType: service.title,
+          description: service.summary,
+          url,
+          provider: { "@type": "ProfessionalService", name: site.name, url: `${origin}/` },
+          areaServed: site.locations.map((name) => ({ "@type": "City", name })),
+        }),
+      );
+    }
   }
   doc = doc.replace("</head>", `    ${head.join("\n    ")}\n  </head>`);
 

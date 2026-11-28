@@ -127,9 +127,6 @@ export default function AboutPage() {
           <div data-reveal className="grid content-start gap-5 lg:sticky lg:top-28 lg:self-start">
             <Eyebrow>What defines us</Eyebrow>
             <h2 className="text-h2">Four principles behind every engagement.</h2>
-            <p className={muted}>
-              The qualities that shape how we work with every client, whatever the size or scope of the engagement.
-            </p>
           </div>
           <div
             data-inverse

@@ -25,6 +25,7 @@ export default function ServicePage() {
         title={service.heroTitle}
         lead={service.summary}
         image={service.image}
+        imageAlt={service.imageAlt}
       />
 
       {service.intro && (
