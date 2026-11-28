@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useLayoutEffect, useState } from "react";
 import CardSwap, { Card } from "./card-swap";
 
 /** True while the media query matches (updates on resize/rotate). */
 function useMediaQuery(query) {
-  // false while pre-rendering at build time (no window); the effect below sets the real value in the browser
-  const [matches, setMatches] = useState(() => typeof window !== "undefined" && window.matchMedia(query).matches);
-  useEffect(() => {
+  // Always false on the first render, like the build-time pre-render (no window), so hydrating the pre-rendered
+  // HTML matches; the layout effect then sets the real value before the browser paints (no visible jump).
+  const [matches, setMatches] = useState(false);
+  useLayoutEffect(() => {
     const mq = window.matchMedia(query);
     const onChange = () => setMatches(mq.matches);
     onChange();

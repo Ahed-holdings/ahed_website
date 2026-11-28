@@ -43,6 +43,7 @@ export function StaggeredMenu({
   // Scrolled past the first section (the hero): the menu button turns brand gold
   const [pastHero, setPastHero] = useState(false);
   const headerRef = useRef(null);
+  const scopeRef = useRef(null);
   const backdropRef = useRef(null);
   const brandRef = useRef(null);
 
@@ -78,7 +79,12 @@ export function StaggeredMenu({
       gsap.set(plusVRef.current, { transformOrigin: "50% 50%", rotate: 90 });
       gsap.set(textInnerRef.current, { yPercent: 0 });
     });
-    return () => ctx.revert();
+    // Panel and underlays are now off-screen: let them show (hidden until here, see .sm-scope:not([data-ready]) below)
+    scopeRef.current?.setAttribute("data-ready", "");
+    return () => {
+      scopeRef.current?.removeAttribute("data-ready");
+      ctx.revert();
+    };
   }, []);
 
   const resetPanelContents = (panel) => {
@@ -313,7 +319,7 @@ export function StaggeredMenu({
   }, [open, pathname]);
 
   return (
-    <div className="sm-scope pointer-events-none fixed inset-0 z-50 overflow-hidden" data-open={open || undefined}>
+    <div ref={scopeRef} className="sm-scope pointer-events-none fixed inset-0 z-50 overflow-hidden" data-open={open || undefined}>
       {/* Open: the page behind blurs and dims slightly; clicking it closes the menu (click-away handler) */}
       <div
         ref={backdropRef}
@@ -448,6 +454,10 @@ export function StaggeredMenu({
    the footer (--sm-fixed), each link taking ~9 × its font size... (line-height 1.12 + descender room 0.14em = 1.26em,
    × 7 ≈ 8.8em). Also capped by width (11vw, so "How we work" fits on phones) and by 3.25rem on large screens. */
 .sm-scope { --sm-fixed: 24rem; }
+/* Until the menu script has moved the closed panel and its underlays off-screen, keep them hidden: the pre-rendered
+   HTML would otherwise show the open menu over the page for a moment on slow connections. */
+.sm-scope:not([data-ready]) .sm-panel,
+.sm-scope:not([data-ready]) .sm-prelayers { visibility: hidden; }
 .sm-scope .sm-panel-item { font-size: clamp(1.4rem, min(calc((100svh - var(--sm-fixed)) / 9), 11vw), 3.25rem); }
 /* Very short screens (phones in landscape): drop the contact footer, the links get the room */
 @media (max-height: 34rem) {

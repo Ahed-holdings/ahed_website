@@ -87,6 +87,8 @@ export default defineConfig({
     // `@/components/ui` → src/components/ui.jsx
     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },
+  // manifest: lets scripts/prerender.mjs find each page's code chunk and the font file to preload
+  build: { manifest: true },
   server: { port: 3000 },
   preview: { port: 4173, headers: netlifyHeaders() },
 });

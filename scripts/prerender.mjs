@@ -31,6 +31,30 @@ const { render, pages, services, site } = await import(pathToFileURL(ssrEntry).h
 
 const origin = (process.env.URL || site.url).replace(/\/$/, "");
 const template = readFileSync(`${dist}index.html`, "utf8");
+
+/*
+ * Performance: what each page should start downloading straight away, from Vite's build manifest.
+ * - the Manrope latin font file (the only subset the site's text uses), so text shows in its final font sooner;
+ * - the page's own code chunk and the chunks it imports (pages are split, src/routes.jsx), fetched together with
+ *   the main script instead of after it.
+ */
+const manifest = JSON.parse(readFileSync(`${dist}.vite/manifest.json`, "utf8"));
+const fontFile = Object.values(manifest)
+  .flatMap((entry) => entry.assets ?? [])
+  .find((file) => /manrope-latin-wght-normal/.test(file));
+const pageModule = (path) => {
+  if (path === "/") return "src/pages/home.jsx";
+  if (path.startsWith("/services/")) return "src/pages/service-detail.jsx";
+  const name = path.slice(1);
+  return manifest[`src/pages/${name}.jsx`] ? `src/pages/${name}.jsx` : "src/pages/not-found.jsx";
+};
+const chunksFor = (key, seen = new Set()) => {
+  const entry = manifest[key];
+  if (!entry || seen.has(entry.file)) return seen;
+  seen.add(entry.file);
+  for (const dep of entry.imports ?? []) if (!manifest[dep]?.isEntry) chunksFor(dep, seen);
+  return seen;
+};
 if (!template.includes('<div id="root"></div>')) {
   throw new Error("dist/index.html is already pre-rendered: run the whole `npm run build`, not this script alone.");
 }
@@ -100,6 +124,8 @@ async function page(path) {
   doc = setMetaContent(doc, "name", "robots", meta.noindex ? "noindex" : "index, follow");
 
   const head = [];
+  if (fontFile) head.push(`<link rel="preload" href="/${fontFile}" as="font" type="font/woff2" crossorigin />`);
+  for (const file of chunksFor(pageModule(path))) head.push(`<link rel="modulepreload" crossorigin href="/${file}" />`);
   if (!meta.noindex) {
     head.push(`<link rel="canonical" href="${escapeAttr(url)}" />`);
     head.push(`<meta property="og:url" content="${escapeAttr(url)}" />`);

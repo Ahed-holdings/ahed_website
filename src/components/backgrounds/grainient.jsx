@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const MAX_COLORS = 8;
 const MAX_STIRS = 24;
@@ -305,7 +305,26 @@ const Grainient = ({
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
 
+  // Ahed change (performance): start WebGL only after the page has finished loading and the browser is idle, so
+  // shader setup doesn't compete with the first paint. The canvas already fades in once drawn, so nothing looks
+  // different; until then the hero's navy background shows, as before.
+  const [ready, setReady] = useState(false);
   useEffect(() => {
+    const idle = 'requestIdleCallback' in window;
+    let handle = 0;
+    const go = () => {
+      handle = idle ? window.requestIdleCallback(() => setReady(true), { timeout: 2000 }) : window.setTimeout(() => setReady(true), 200);
+    };
+    if (document.readyState === 'complete') go();
+    else window.addEventListener('load', go, { once: true });
+    return () => {
+      window.removeEventListener('load', go);
+      if (handle) (idle ? window.cancelIdleCallback : window.clearTimeout)(handle);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return undefined;
     const container = containerRef.current;
     const canvas = canvasRef.current;
     const gl = canvas?.getContext('webgl2', {
@@ -621,7 +640,7 @@ const Grainient = ({
       // then the effect again on the same <canvas>; getContext() would return the lost context and the hero
       // went blank. The GL objects are deleted above and the context is released with the canvas.
     };
-  }, []);
+  }, [ready]);
 
   useEffect(() => {
     wakeRef.current?.();

@@ -4,29 +4,27 @@
  * 404 page with a real 404 status. Add new pages here AND to the page list in src/lib/pages.js.
  */
 import { RootLayout } from "@/components/layout/root-layout";
-import AboutPage from "@/pages/about";
-import ContactPage from "@/pages/contact";
-import HomePage from "@/pages/home";
-import HowWeWorkPage from "@/pages/how-we-work";
-import IndustriesPage from "@/pages/industries";
-import InsightsPage from "@/pages/insights";
-import NotFoundPage from "@/pages/not-found";
-import ServicePage from "@/pages/service-detail";
-import ServicesPage from "@/pages/services";
+
+/**
+ * Each page is its own JavaScript file, loaded only when that page is visited (performance: the home page no longer
+ * downloads every other page's code). The build-time renderer and the browser both load it before rendering, so
+ * the pre-rendered HTML and the live page match (see src/main.jsx).
+ */
+const page = (load) => async () => ({ Component: (await load()).default });
 
 export const routes = [
   {
     element: <RootLayout />,
     children: [
-      { index: true, element: <HomePage /> },
-      { path: "about", element: <AboutPage /> },
-      { path: "services", element: <ServicesPage /> },
-      { path: "services/:slug", element: <ServicePage /> },
-      { path: "how-we-work", element: <HowWeWorkPage /> },
-      { path: "industries", element: <IndustriesPage /> },
-      { path: "insights", element: <InsightsPage /> },
-      { path: "contact", element: <ContactPage /> },
-      { path: "*", element: <NotFoundPage /> },
+      { index: true, lazy: page(() => import("@/pages/home")) },
+      { path: "about", lazy: page(() => import("@/pages/about")) },
+      { path: "services", lazy: page(() => import("@/pages/services")) },
+      { path: "services/:slug", lazy: page(() => import("@/pages/service-detail")) },
+      { path: "how-we-work", lazy: page(() => import("@/pages/how-we-work")) },
+      { path: "industries", lazy: page(() => import("@/pages/industries")) },
+      { path: "insights", lazy: page(() => import("@/pages/insights")) },
+      { path: "contact", lazy: page(() => import("@/pages/contact")) },
+      { path: "*", lazy: page(() => import("@/pages/not-found")) },
     ],
   },
 ];
